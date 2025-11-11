@@ -134,7 +134,7 @@ def generate_Graph(df=None):
         # Bar_chart
         bar_data = df[['Expense', 'Amount']].groupby('Expense').sum().reset_index()
         bar = px.bar(x=bar_data['Expense'], y=bar_data['Amount'], color=bar_data['Expense'], template="plotly_dark",
-                     labels={'x': 'Expense Type', 'y': 'Balance (₹)'}, height=287)
+                     labels={'x': 'Expense Type', 'y': 'Balance (₱)'}, height=287)
         bar.update(layout_showlegend=False)
         bar.update_layout(
             margin=dict(l=2, r=2, t=40, b=2),
@@ -144,7 +144,7 @@ def generate_Graph(df=None):
         # Stacked Bar Chart
         s = df.groupby(['Note', 'Expense']).sum().reset_index()
         stack = px.bar(x=s['Note'], y=s['Amount'], color=s['Expense'], barmode="stack", template="plotly_dark",
-                       labels={'x': 'Category', 'y': 'Balance (₹)'}, height=290)
+                       labels={'x': 'Category', 'y': 'Balance (₱)'}, height=290)
         stack.update(layout_showlegend=False)
         stack.update_xaxes(tickangle=45)
         stack.update_layout(
@@ -264,15 +264,15 @@ def sort_summary(df):
     month = h_month[h_amount.index(amount)]
     year = h_year[h_amount.index(amount)]
     datas.append(
-        {'head': "₹" + str(num2MB(amount)), 'main': f"{month}'{str(year)[2:]}", 'msg': "Highest income in a month"})
+        {'head': "₱" + str(num2MB(amount)), 'main': f"{month}'{str(year)[2:]}", 'msg': "Highest income in a month"})
 
     # per day avg income
     per_day_income = df[df['Expense'] == 'Earning']['Amount'].sum() / df['Date'].nunique()
-    datas.append({'head': 'Income', 'main': "₹" + str(num2MB(per_day_income)), 'msg': "You earn everyday"})
+    datas.append({'head': 'Income', 'main': "₱" + str(num2MB(per_day_income)), 'msg': "You earn everyday"})
 
     # per week avg spend
     per_week_saving = df[df['Expense'] == 'Saving'].groupby('Week').sum()['Amount'].mean()
-    datas.append({'head': 'Saving', 'main': "₹" + str(num2MB(per_week_saving)), 'msg': "You save every week"})
+    datas.append({'head': 'Saving', 'main': "₱" + str(num2MB(per_week_saving)), 'msg': "You save every week"})
 
     # per month income
     avg_earn = df[df['Expense'] == 'Earning'].groupby('Month').sum()['Amount'].reset_index()['Amount'].mean()
@@ -285,7 +285,7 @@ def sort_summary(df):
 
     # every minute invest
     every_minute_invest = round(df[df['Expense'] == 'Investment'].groupby('Day').sum()['Amount'].mean() / 24 / 60, 2)
-    datas.append({'head': 'Invest', 'main': f"₹{round(every_minute_invest, 2)}", 'msg': "You invest every minute"})
+    datas.append({'head': 'Invest', 'main': f"₱{round(every_minute_invest, 2)}", 'msg': "You invest every minute"})
 
     return datas
 
@@ -311,7 +311,7 @@ def expense_goal(df):
         else:
             dic['status'] = 'decreased'
         dic['percent'] = abs(percent)
-        dic['value'] = "₹" + num2MB(x[0])
+        dic['value'] = "₱" + num2MB(x[0])
         goal_ls.append(dic)
     return goal_ls
 
@@ -382,7 +382,7 @@ def meraHeatmap(df=None, x=None, y=None, text_auto=True, aspect='auto', height=N
 
 
 def month_bar(df=None, height=None, width=None):
-    t = df.groupby(['Month', 'Expense']).sum().reset_index()[['Month', 'Expense', 'Amount(₹)']]
+    t = df.groupby(['Month', 'Expense']).sum().reset_index()[['Month', 'Expense', 'Amount(₱)']]
 
     month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
              "November", "December"]
@@ -394,7 +394,7 @@ def month_bar(df=None, height=None, width=None):
 
     t['Month'] = t['Month'].apply(lambda x: m[x])
 
-    fig = px.bar(t, x='Month', y='Amount(₹)', color='Expense', text_auto=True, height=height, width=width,
+    fig = px.bar(t, x='Month', y='Amount(₱)', color='Expense', text_auto=True, height=height, width=width,
                  template='plotly_dark')
     fig.update_layout(legend=dict(
         orientation="h",
@@ -410,7 +410,7 @@ def month_bar(df=None, height=None, width=None):
 
 
 def meraSunburst(df=None, height=None, width=None):
-    fig = px.sunburst(df, path=['Year', 'Expense', 'Note'], values='Amount(₹)', height=height, width=width)
+    fig = px.sunburst(df, path=['Year', 'Expense', 'Note'], values='Amount(₱)', height=height, width=width)
     fig.update_layout(margin=dict(l=1, r=1, t=1, b=1), paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
     fig.update(layout_showlegend=False)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

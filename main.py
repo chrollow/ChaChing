@@ -237,19 +237,19 @@ def analysis():
             session['user_id'])
 
         data = support.execute_query('search', query2)
-        df = pd.DataFrame(data, columns=['Date', 'Expense', 'Note', 'Amount(₹)'])
+        df = pd.DataFrame(data, columns=['Date', 'Expense', 'Note', 'Amount(₱)'])
         df = support.generate_df(df)
 
         if df.shape[0] > 0:
-            pie = support.meraPie(df=df, names='Expense', values='Amount(₹)', hole=0.7, hole_text='Expense',
+            pie = support.meraPie(df=df, names='Expense', values='Amount(₱)', hole=0.7, hole_text='Expense',
                                   hole_font=20,
                                   height=180, width=180, margin=dict(t=1, b=1, l=1, r=1))
-            df2 = df.groupby(['Note', "Expense"]).sum().reset_index()[["Expense", 'Note', 'Amount(₹)']]
-            bar = support.meraBarChart(df=df2, x='Note', y='Amount(₹)', color="Expense", height=180, x_label="Category",
+            df2 = df.groupby(['Note', "Expense"]).sum().reset_index()[["Expense", 'Note', 'Amount(₱)']]
+            bar = support.meraBarChart(df=df2, x='Note', y='Amount(₱)', color="Expense", height=180, x_label="Category",
                                        show_xtick=False)
-            line = support.meraLine(df=df, x='Date', y='Amount(₹)', color='Expense', slider=False, show_legend=False,
+            line = support.meraLine(df=df, x='Date', y='Amount(₱)', color='Expense', slider=False, show_legend=False,
                                     height=180)
-            scatter = support.meraScatter(df, 'Date', 'Amount(₹)', 'Expense', 'Amount(₹)', slider=False, )
+            scatter = support.meraScatter(df, 'Date', 'Amount(₱)', 'Expense', 'Amount(₱)', slider=False, )
             heat = support.meraHeatmap(df, 'Day_name', 'Month_name', height=200, title="Transaction count Day vs Month")
             month_bar = support.month_bar(df, 280)
             sun = support.meraSunburst(df, 280)
