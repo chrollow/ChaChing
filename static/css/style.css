@@ -1,40 +1,207 @@
+/* Modern Navigation Bar with Glassmorphism */
 .bg-nav{
-    background: #e65c00;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #F9D423, #e65c00);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #F9D423, #e65c00); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    transition: all 0.3s ease;
 }
+
+.bg-nav a {
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+}
+
+.bg-nav a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    text-decoration: none !important;
+}
+
 .body{
-    background: #5C258D;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #4389A2, #5C258D);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #4389A2, #5C258D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-.page-bg{
-    background: #0F2027;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    min-height: 100vh;
+    background-attachment: fixed;
 }
 
+.page-bg{
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+    min-height: 100vh;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.page-bg::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.page-bg > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Modern Card Styles with Glassmorphism and Animations */
 .deep-purple{
-    background: #673AB7;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #512DA8, #673AB7);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #512DA8, #673AB7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(102, 126, 234, 0.37);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.deep-purple::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.deep-purple:hover::before {
+    left: 100%;
+}
+
+.deep-purple:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px 0 rgba(102, 126, 234, 0.5);
 }
 
 .alive{
-    background: #CB356B;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #BD3F32, #CB356B);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #BD3F32, #CB356B); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(245, 87, 108, 0.37);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px !important;
+    overflow: hidden;
+    position: relative;
 }
+
+.alive::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.alive:hover::before {
+    left: 100%;
+}
+
+.alive:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px 0 rgba(245, 87, 108, 0.5);
+}
+
 .citrus{
-    background: #FDC830;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #F37335, #FDC830);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #F37335, #FDC830); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(252, 182, 159, 0.37);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px !important;
+    overflow: hidden;
+    position: relative;
 }
+
+.citrus::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.citrus:hover::before {
+    left: 100%;
+}
+
+.citrus:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px 0 rgba(252, 182, 159, 0.5);
+}
+
 .green{
-    background: #11998e;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #38ef7d, #11998e);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #38ef7d, #11998e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(132, 250, 176, 0.37);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.green::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.green:hover::before {
+    left: 100%;
+}
+
+.green:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px 0 rgba(132, 250, 176, 0.5);
+}
+
+/* Card Body Enhancements */
+.card-body {
+    padding: 1.5rem !important;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.card-body h5 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.card-body h2 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -83,7 +250,7 @@ input {
 }
 
 .contact-sec {
-  align-item: center;
+  align-items: center;
   display: flex;
   background-color: #5cbde466;
 }
@@ -270,21 +437,47 @@ form.contFrm {
 }
 
 
+/* Enhanced Chart Container with Glassmorphism */
 .chart_border {
-  border: 2px solid white;
-  border-radius: 40px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.chart_border:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.chart_border .chart {
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 
+/* Modern Panel with Glassmorphism */
 .panel {
-    background: linear-gradient(
-        90deg, #262a4f, #122442
-    );
-    box-shadow:
-    -5px -5px 8px #293063,
-    5px 5px 8px #11163c;
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 20px;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
 }
 
 
@@ -313,9 +506,38 @@ form.contFrm {
 }
 
 .sales > div {
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    border-radius: 15px;
-    padding: 1em;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 20px;
+    padding: 1.5em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.sales > div::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sales > div:hover::before {
+    opacity: 1;
+}
+
+.sales > div:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.6);
 }
 
 .sales h1 {
@@ -381,16 +603,24 @@ form.contFrm {
     font-size: 2em;
 }
 
+/* Enhanced Goal Panel with Glassmorphism */
 .goal-panel {
-    color:#ffff;
-    background: linear-gradient(
-        90deg, #192f37, #264652
-    );
-    box-shadow:
-    -5px -5px 8px #264652,
-    5px 5px 8px #192f37;
-    border-radius: 15px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 20px;
     overflow: hidden;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.goal-panel:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .body2 {
@@ -410,4 +640,340 @@ form.contFrm {
 
 .width-100 {
     width: 100%;
-  }
+}
+
+/* Enhanced Table Styling */
+.table-dark {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.table-dark thead {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.table-dark tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table-dark tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.01);
+}
+
+/* Enhanced Button Styling */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px 0 rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(102, 126, 234, 0.6);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.btn-outline-warning {
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px 0 rgba(255, 193, 7, 0.4);
+}
+
+/* Enhanced Modal Styling */
+.modal-content {
+    border-radius: 20px;
+    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.modal-header {
+    border-radius: 20px 20px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Form Controls */
+.form-control {
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    transform: translateY(-2px);
+}
+
+/* Smooth Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Enhanced Container */
+.container {
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Text Color Improvements */
+.text-dark {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.text-dark:hover {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Enhanced Alert Styling */
+.alert {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Chart Container Enhancements */
+.chart, .graph {
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s ease;
+}
+
+.chart:hover, .graph:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* List Enhancements */
+.list li {
+    transition: all 0.2s ease;
+    border-radius: 10px;
+    margin: 5px 0;
+}
+
+.list li:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+/* Goal Icon Animations */
+.icon-color-up, .icon-color-down {
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Footer Styling */
+footer {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 20px 20px 0 0;
+    margin-top: 3rem;
+}
+
+/* Opacity Utility Class */
+.opacity-75 {
+    opacity: 0.75;
+}
+
+/* Enhanced Material Icons */
+.material-icons {
+    vertical-align: middle;
+    font-size: 1.2em;
+}
+
+/* Smooth Scroll Behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Enhanced Text Shadows */
+h1, h2, h3, h4, h5, h6 {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading Animation for Charts */
+@keyframes chartLoad {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.chart, .graph {
+    animation: chartLoad 0.5s ease-out;
+}
+
+/* Enhanced Hover Effects for Cards */
+.card {
+    cursor: pointer;
+}
+
+.card:hover .card-body h2 {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+/* Improved Navigation Links */
+.bg-nav a {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+/* Enhanced Table Styling */
+.table-dark th {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.table-dark td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced Modal Styling */
+.modal-dialog {
+    margin: 2rem auto;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+/* Better Form Styling */
+select.form-control {
+    cursor: pointer;
+}
+
+select.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Enhanced Button Hover Effects */
+.btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Improved Card Text Visibility */
+.card-body h5 {
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Goal Panel Text */
+.goal-panel h5, .goal-panel h6 {
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Better Chart Container Spacing */
+.chart_border h5 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+    .card-body h2 {
+        font-size: 1.5rem;
+    }
+    
+    .chart_border {
+        padding: 15px;
+    }
+    
+    .sales {
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-gap: 1em;
+    }
+    
+    .goal-panel {
+        padding: 1rem;
+    }
+    
+    .chart, .graph {
+        min-height: 250px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .sales {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .card-body h2 {
+        font-size: 1.25rem;
+    }
+    
+    .bg-nav {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .bg-nav a {
+        margin: 0.25rem 0;
+        font-size: 0.85rem;
+    }
+}

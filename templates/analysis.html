@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <!-- Google Icons -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         <title>Expense Tracker - Analysis</title>
     </head>
     <body class="body">
@@ -26,32 +28,48 @@
 
      <div class="container">
          <div class="row my-3">
+             <div class="col-12 mb-4">
+                 <h2 class="text-white text-center" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                     <i class="material-icons" style="vertical-align: middle;">analytics</i>
+                     Advanced Financial Analysis
+                 </h2>
+                 <p class="text-white text-center opacity-75">Interactive charts with zoom, pan, and download capabilities</p>
+             </div>
+         </div>
+         <div class="row my-3">
              <div class="col">
                  <div class="row">
                      <div class="col-auto goal-panel text-center m-2">
-                         <div id="pie" class="chart"></div>
+                         <h5 class="text-white mb-3">Expense Distribution</h5>
+                         <div id="pie" class="chart" style="min-height: 300px;"></div>
                      </div>
                      <div class="col-5 goal-panel m-2">
-                        <div id="stack_bar" class="chart"></div>
+                        <h5 class="text-white mb-3">Category Breakdown</h5>
+                        <div id="stack_bar" class="chart" style="min-height: 300px;"></div>
                      </div>
                      <div class="col-4 goal-panel m-2">
-                        <div id="line" class="graph"></div>
+                        <h5 class="text-white mb-3">Trend Analysis</h5>
+                        <div id="line" class="graph" style="min-height: 300px;"></div>
                      </div>
                  </div>
                  <div class="row my-2">
                      <div class="col-7 goal-panel m-2">
-                         <div id="month_bar" class="chart"></div>
+                         <h5 class="text-white mb-3">Monthly Comparison</h5>
+                         <div id="month_bar" class="chart" style="min-height: 350px;"></div>
                      </div>
                      <div class="col-4 goal-panel m-2">
-                         <div id="sun" class="chart"></div>
+                         <h5 class="text-white mb-3">Hierarchical View</h5>
+                         <div id="sun" class="chart" style="min-height: 350px;"></div>
                      </div>
                  </div>
                  <div class="row">
                      <div class="col-md-6 goal-panel text-center m-2">
-                         <div id="scatter" class="chart"></div>
+                         <h5 class="text-white mb-3">Scatter Analysis</h5>
+                         <div id="scatter" class="chart" style="min-height: 300px;"></div>
                      </div>
                      <div class="col-md-5 goal-panel m-2">
-                        <div id="heat" class="chart"></div>
+                        <h5 class="text-white mb-3">Transaction Heatmap</h5>
+                        <div id="heat" class="chart" style="min-height: 300px;"></div>
                      </div>
                  </div>
 
@@ -72,6 +90,23 @@
      <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/js/multi-select-tag.js"></script>
     </body>
     <script type='text/javascript'>
+      // Enhanced graph configuration with full interactivity
+      var graphConfig = {
+        responsive: true,
+        displayModeBar: true,
+        displaylogo: false,
+        modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+        toImageButtonOptions: {
+          format: 'png',
+          filename: 'expense_analysis',
+          height: 600,
+          width: 900,
+          scale: 2
+        },
+        scrollZoom: true,
+        doubleClick: 'reset'
+      };
+
       var bar = {{bar | safe}};
       var pie = {{pie | safe}};
       var line_graph = {{line | safe}};
@@ -80,14 +115,47 @@
       var month_graph = {{month_bar | safe}};
       var sun_graph = {{sun | safe}};
 
-<!--Plotly.plot('div_id',data,{});-->
-      Plotly.plot('pie',pie,{});
-      Plotly.plot('stack_bar',bar,{});
-      Plotly.plot('line',line_graph,{});
-      Plotly.plot('scatter',scatter_graph,{});
-      Plotly.plot('heat',heat_graph,{});
-      Plotly.plot('month_bar',month_graph,{});
-      Plotly.plot('sun',sun_graph,{});
+      // Plot all graphs with enhanced configuration
+      Plotly.plot('pie', pie, {}, graphConfig);
+      Plotly.plot('stack_bar', bar, {}, graphConfig);
+      Plotly.plot('line', line_graph, {}, graphConfig);
+      Plotly.plot('scatter', scatter_graph, {}, graphConfig);
+      Plotly.plot('heat', heat_graph, {}, graphConfig);
+      Plotly.plot('month_bar', month_graph, {}, graphConfig);
+      Plotly.plot('sun', sun_graph, {}, graphConfig);
+
+      // Add resize handler for responsive graphs
+      window.addEventListener('resize', function() {
+        Plotly.Plots.resize('pie');
+        Plotly.Plots.resize('stack_bar');
+        Plotly.Plots.resize('line');
+        Plotly.Plots.resize('scatter');
+        Plotly.Plots.resize('heat');
+        Plotly.Plots.resize('month_bar');
+        Plotly.Plots.resize('sun');
+      });
+
+      // Add animation on scroll
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.chart, .graph').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'all 0.6s ease-out';
+        observer.observe(el);
+      });
 
     </script>
 </html>

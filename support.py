@@ -131,47 +131,101 @@ def generate_Graph(df=None):
     :return:
     """
     if df is not None and df.shape[0] > 0:
-        # Bar_chart
+        # Bar_chart with enhanced interactivity
         bar_data = df[['Expense', 'Amount']].groupby('Expense').sum().reset_index()
         bar = px.bar(x=bar_data['Expense'], y=bar_data['Amount'], color=bar_data['Expense'], template="plotly_dark",
-                     labels={'x': 'Expense Type', 'y': 'Balance (₱)'}, height=287)
+                     labels={'x': 'Expense Type', 'y': 'Balance (₱)'}, height=287,
+                     color_discrete_sequence=px.colors.qualitative.Set3)
         bar.update(layout_showlegend=False)
+        bar.update_traces(
+            hovertemplate='<b>%{x}</b><br>Amount: ₱%{y:,.2f}<extra></extra>',
+            marker_line_width=2,
+            marker_line_color='white'
+        )
         bar.update_layout(
             margin=dict(l=2, r=2, t=40, b=2),
             paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)')
-
-        # Stacked Bar Chart
-        s = df.groupby(['Note', 'Expense']).sum().reset_index()
-        stack = px.bar(x=s['Note'], y=s['Amount'], color=s['Expense'], barmode="stack", template="plotly_dark",
-                       labels={'x': 'Category', 'y': 'Balance (₱)'}, height=290)
-        stack.update(layout_showlegend=False)
-        stack.update_xaxes(tickangle=45)
-        stack.update_layout(
-            margin=dict(l=2, r=2, t=30, b=2),
-            paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
+            plot_bgcolor='rgba(0,0,0,0)',
+            hovermode='closest',
+            dragmode='zoom',
+            xaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+            yaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+            modebar=dict(orientation='v')
         )
 
-        # Line Chart
-        line = px.line(df, x='Date', y='Amount', color='Expense', template="plotly_dark")
-        line.update_xaxes(rangeslider_visible=True)
-        line.update_layout(title_text='Track Record', title_x=0.,
-                           legend=dict(
-                               orientation="h",
-                               yanchor="bottom",
-                               y=1.02,
-                               xanchor="right",
-                               x=1
-                           ),
-                           margin=dict(l=2, r=2, t=30, b=2),
-                           paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
-                           )
+        # Stacked Bar Chart with enhanced interactivity
+        s = df.groupby(['Note', 'Expense']).sum().reset_index()
+        stack = px.bar(x=s['Note'], y=s['Amount'], color=s['Expense'], barmode="stack", template="plotly_dark",
+                       labels={'x': 'Category', 'y': 'Balance (₱)'}, height=290,
+                       color_discrete_sequence=px.colors.qualitative.Pastel)
+        stack.update(layout_showlegend=False)
+        stack.update_xaxes(tickangle=45, showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)')
+        stack.update_traces(
+            hovertemplate='<b>%{x}</b><br>%{fullData.name}: ₱%{y:,.2f}<br>Total: ₱%{base:,.2f}<extra></extra>',
+            marker_line_width=1.5,
+            marker_line_color='rgba(255,255,255,0.3)'
+        )
+        stack.update_layout(
+            margin=dict(l=2, r=2, t=30, b=2),
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)',
+            hovermode='x unified',
+            dragmode='zoom',
+            yaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+            modebar=dict(orientation='v')
+        )
 
-        # Sunburst pie chart
-        pie = px.sunburst(df, path=['Expense', 'Note'], values='Amount', height=280, template="plotly_dark")
-        # pie.update_layout(title_text='Utility Chart', title_x=0.5)
-        pie.update_layout(margin=dict(l=0, r=0, t=0, b=0),
-                          paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+        # Line Chart with enhanced interactivity
+        line = px.line(df, x='Date', y='Amount', color='Expense', template="plotly_dark",
+                       color_discrete_sequence=px.colors.qualitative.Bold)
+        line.update_xaxes(
+            rangeslider_visible=True,
+            rangeslider_thickness=0.1,
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='rgba(255,255,255,0.1)'
+        )
+        line.update_traces(
+            mode='lines+markers',
+            marker_size=6,
+            line_width=2.5,
+            hovertemplate='<b>%{fullData.name}</b><br>Date: %{x}<br>Amount: ₱%{y:,.2f}<extra></extra>'
+        )
+        line.update_layout(
+            title_text='Track Record', 
+            title_x=0.,
+            title_font_size=16,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1,
+                bgcolor='rgba(0,0,0,0.5)',
+                bordercolor='rgba(255,255,255,0.2)',
+                borderwidth=1
+            ),
+            margin=dict(l=2, r=2, t=30, b=2),
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)',
+            hovermode='x unified',
+            dragmode='zoom',
+            yaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+            modebar=dict(orientation='v')
+        )
+
+        # Sunburst pie chart with enhanced interactivity
+        pie = px.sunburst(df, path=['Expense', 'Note'], values='Amount', height=280, template="plotly_dark",
+                         color_discrete_sequence=px.colors.qualitative.Set3)
+        pie.update_traces(
+            hovertemplate='<b>%{label}</b><br>Amount: ₱%{value:,.2f}<br>Percentage: %{percentParent:.1%}<extra></extra>'
+        )
+        pie.update_layout(
+            margin=dict(l=0, r=0, t=0, b=0),
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)',
+            modebar=dict(orientation='v')
+        )
 
         bar = json.dumps(bar, cls=plotly.utils.PlotlyJSONEncoder)
         pie = json.dumps(pie, cls=plotly.utils.PlotlyJSONEncoder)
@@ -185,12 +239,28 @@ def generate_Graph(df=None):
 def makePieChart(df=None, expense='Earning', names='Note', values='Amount', hole=0.5,
                  color_discrete_sequence=px.colors.sequential.RdBu, size=300, textposition='inside',
                  textinfo='percent+label', margin=2):
-    fig = px.pie(df[df['Expense'] == expense], names=names, values=values, hole=hole,
-                 color_discrete_sequence=color_discrete_sequence, height=size, width=size)
-    fig.update_traces(textposition=textposition, textinfo=textinfo)
-    fig.update_layout(annotations=[dict(text=expense, y=0.5, font_size=20, font_color='white', showarrow=False)])
-    fig.update_layout(margin=dict(l=margin, r=margin, t=margin, b=margin),
-                      paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+    filtered_df = df[df['Expense'] == expense]
+    fig = px.pie(filtered_df, names=names, values=values, hole=hole,
+                 color_discrete_sequence=color_discrete_sequence, height=size, width=size,
+                 template="plotly_dark")
+    pull_list = [0.05] * len(filtered_df) if len(filtered_df) > 0 else [0]
+    fig.update_traces(
+        textposition=textposition, 
+        textinfo=textinfo,
+        marker_line_width=2,
+        marker_line_color='white',
+        hovertemplate='<b>%{label}</b><br>Amount: ₱%{value:,.2f}<br>Percentage: %{percent:.1%}<extra></extra>',
+        pull=pull_list
+    )
+    fig.update_layout(
+        annotations=[dict(text=expense, y=0.5, font_size=20, font_color='white', showarrow=False, 
+                         font=dict(family="Arial", size=20, color="white"))],
+        margin=dict(l=margin, r=margin, t=margin, b=margin),
+        paper_bgcolor='rgba(0,0,0,0)', 
+        plot_bgcolor='rgba(0,0,0,0)',
+        hovermode='closest',
+        modebar=dict(orientation='v')
+    )
     fig.update(layout_showlegend=False)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -198,14 +268,32 @@ def makePieChart(df=None, expense='Earning', names='Note', values='Amount', hole
 def meraBarChart(df=None, x=None, y=None, color=None, x_label=None, y_label=None, height=None, width=None,
                  show_legend=False, show_xtick=True, show_ytick=True, x_tickangle=0, y_tickangle=0, barmode='relative'):
     bar = px.bar(data_frame=df, x=x, y=y, color=color, template="plotly_dark", barmode=barmode,
-                 labels={'x': x_label, 'y': y_label}, height=height, width=width)
+                 labels={'x': x_label, 'y': y_label}, height=height, width=width,
+                 color_discrete_sequence=px.colors.qualitative.Set3)
     bar.update(layout_showlegend=show_legend)
+    bar.update_traces(
+        marker_line_width=2,
+        marker_line_color='white',
+        hovertemplate='<b>%{x}</b><br>%{fullData.name}: ₱%{y:,.2f}<extra></extra>'
+    )
     bar.update_layout(
         margin=dict(l=2, r=2, t=2, b=2),
         paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)')
-    bar.update_layout(xaxis=dict(showticklabels=show_xtick, tickangle=x_tickangle),
-                      yaxis=dict(showticklabels=show_ytick, tickangle=y_tickangle))
+        plot_bgcolor='rgba(0,0,0,0)',
+        hovermode='closest',
+        dragmode='zoom',
+        xaxis=dict(showticklabels=show_xtick, tickangle=x_tickangle, 
+                  showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+        yaxis=dict(showticklabels=show_ytick, tickangle=y_tickangle,
+                  showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+        modebar=dict(orientation='v')
+    )
+    if show_legend:
+        bar.update_layout(legend=dict(
+            bgcolor='rgba(0,0,0,0.5)',
+            bordercolor='rgba(255,255,255,0.2)',
+            borderwidth=1
+        ))
 
     return json.dumps(bar, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -319,65 +407,134 @@ def expense_goal(df):
 # --------------- Analysis -----------------
 def meraPie(df=None, names=None, values=None, color=None, width=None, height=None, hole=None, hole_text=None,
             margin=None, hole_font=10):
-    fig = px.pie(data_frame=df, names=names, values=values, color=color, hole=hole, width=width, height=height)
-    fig.update_traces(textposition='inside', textinfo='percent+label')
-    fig.update_layout(annotations=[dict(text=hole_text, y=0.5, font_size=hole_font, showarrow=False)])
-    fig.update_layout(margin=margin, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+    fig = px.pie(data_frame=df, names=names, values=values, color=color, hole=hole, width=width, height=height,
+                 template="plotly_dark", color_discrete_sequence=px.colors.qualitative.Set3)
+    fig.update_traces(
+        textposition='inside', 
+        textinfo='percent+label',
+        marker_line_width=2,
+        marker_line_color='white',
+        hovertemplate='<b>%{label}</b><br>Amount: ₱%{value:,.2f}<br>Percentage: %{percent:.1%}<extra></extra>',
+        pull=[0.05] * len(df) if len(df) > 0 else []
+    )
+    fig.update_layout(
+        annotations=[dict(text=hole_text, y=0.5, font_size=hole_font, showarrow=False,
+                         font=dict(family="Arial", size=hole_font, color="white"))],
+        margin=margin, 
+        paper_bgcolor='rgba(0,0,0,0)', 
+        plot_bgcolor='rgba(0,0,0,0)',
+        hovermode='closest',
+        modebar=dict(orientation='v')
+    )
     fig.update(layout_showlegend=False)
-    # fig.update_layout(title='Total Balance', title_font_size=15, title_font_color='green')
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
 def meraLine(df=None, x=None, y=None, color=None, slider=True, title=None, height=180, width=None, show_legend=True):
-    # Line Chart
-    line = px.line(data_frame=df, x=x, y=y, color=color, template="plotly_dark", height=height, width=width)
-    line.update_xaxes(rangeslider_visible=slider)
+    # Line Chart with enhanced interactivity
+    line = px.line(data_frame=df, x=x, y=y, color=color, template="plotly_dark", height=height, width=width,
+                   color_discrete_sequence=px.colors.qualitative.Bold)
+    line.update_xaxes(
+        rangeslider_visible=slider,
+        rangeslider_thickness=0.1,
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(255,255,255,0.1)'
+    )
+    line.update_traces(
+        mode='lines+markers',
+        marker_size=5,
+        line_width=2,
+        hovertemplate='<b>%{fullData.name}</b><br>%{x}<br>Amount: ₱%{y:,.2f}<extra></extra>'
+    )
     line.update(layout_showlegend=show_legend)
-    line.update_layout(title_text=title, title_x=0.,
-                       legend=dict(
-                           orientation="h",
-                           yanchor="bottom",
-                           y=1.02,
-                           xanchor="right",
-                           x=1
-                       ),
-                       margin=dict(l=2, r=2, t=2, b=2),
-                       paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
-                       )
+    line.update_layout(
+        title_text=title, 
+        title_x=0.,
+        title_font_size=14,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            bgcolor='rgba(0,0,0,0.5)',
+            bordercolor='rgba(255,255,255,0.2)',
+            borderwidth=1
+        ),
+        margin=dict(l=2, r=2, t=2, b=2),
+        paper_bgcolor='rgba(0,0,0,0)', 
+        plot_bgcolor='rgba(0,0,0,0)',
+        hovermode='x unified',
+        dragmode='zoom',
+        yaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+        modebar=dict(orientation='v')
+    )
     return json.dumps(line, cls=plotly.utils.PlotlyJSONEncoder)
 
 
 def meraScatter(df=None, x=None, y=None, color=None, size=None, slider=True, title=None, height=180, width=None,
                 legend=False):
     scatter = px.scatter(data_frame=df, x=x, y=y, color=color, size=size, template="plotly_dark", height=height,
-                         width=width)
-    scatter.update_xaxes(rangeslider_visible=slider)
+                         width=width, color_discrete_sequence=px.colors.qualitative.Set3)
+    scatter.update_xaxes(
+        rangeslider_visible=slider,
+        rangeslider_thickness=0.1,
+        showgrid=True,
+        gridwidth=1,
+        gridcolor='rgba(255,255,255,0.1)'
+    )
+    scatter.update_traces(
+        marker_line_width=1.5,
+        marker_line_color='white',
+        hovertemplate='<b>%{fullData.name}</b><br>%{x}<br>Amount: ₱%{y:,.2f}<extra></extra>'
+    )
     scatter.update(layout_showlegend=legend)
-    scatter.update_layout(xaxis={'visible': False})
-    scatter.update_layout(title_text=title, title_x=0.5,
-                          legend=dict(
-                              orientation="h",
-                              yanchor="bottom",
-                              y=1.02,
-                              xanchor="left",
-                              x=1
-                          ),
-                          margin=dict(l=2, r=2, t=2, b=2),
-                          paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
-                          )
+    scatter.update_layout(
+        xaxis={'visible': False},
+        title_text=title, 
+        title_x=0.5,
+        title_font_size=14,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="left",
+            x=1,
+            bgcolor='rgba(0,0,0,0.5)',
+            bordercolor='rgba(255,255,255,0.2)',
+            borderwidth=1
+        ),
+        margin=dict(l=2, r=2, t=2, b=2),
+        paper_bgcolor='rgba(0,0,0,0)', 
+        plot_bgcolor='rgba(0,0,0,0)',
+        hovermode='closest',
+        dragmode='zoom',
+        yaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+        modebar=dict(orientation='v')
+    )
     return json.dumps(scatter, cls=plotly.utils.PlotlyJSONEncoder)
 
 
 def meraHeatmap(df=None, x=None, y=None, text_auto=True, aspect='auto', height=None, width=None, title=None):
     fig = px.imshow(pd.crosstab(df[x], df[y]), text_auto=text_auto, aspect=aspect, height=height, width=width,
-                    template='plotly_dark')
+                    template='plotly_dark', color_continuous_scale='Viridis')
+    fig.update_traces(
+        hovertemplate='<b>%{y}</b> vs <b>%{x}</b><br>Count: %{z}<extra></extra>'
+    )
     fig.update(layout_showlegend=False)
-    fig.update_layout(xaxis=dict(showticklabels=False),
-                      yaxis=dict(showticklabels=False))
-    fig.update_layout(title_text=title, title_x=0.5,
-                      margin=dict(l=2, r=2, t=30, b=2),
-                      paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
-                      )
+    fig.update_layout(
+        xaxis=dict(showticklabels=True, showgrid=False),
+        yaxis=dict(showticklabels=True, showgrid=False),
+        title_text=title, 
+        title_x=0.5,
+        title_font_size=14,
+        margin=dict(l=2, r=2, t=30, b=2),
+        paper_bgcolor='rgba(0,0,0,0)', 
+        plot_bgcolor='rgba(0,0,0,0)',
+        hovermode='closest',
+        modebar=dict(orientation='v')
+    )
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
@@ -395,22 +552,50 @@ def month_bar(df=None, height=None, width=None):
     t['Month'] = t['Month'].apply(lambda x: m[x])
 
     fig = px.bar(t, x='Month', y='Amount(₱)', color='Expense', text_auto=True, height=height, width=width,
-                 template='plotly_dark')
-    fig.update_layout(legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1
-    ))
-    fig.update_layout(margin=dict(l=2, r=2, t=30, b=2),
-                      paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'
-                      )
+                 template='plotly_dark', color_discrete_sequence=px.colors.qualitative.Pastel,
+                 barmode='group')
+    fig.update_traces(
+        marker_line_width=2,
+        marker_line_color='white',
+        hovertemplate='<b>%{x}</b><br>%{fullData.name}: ₱%{y:,.2f}<extra></extra>',
+        texttemplate='₱%{y:,.0f}',
+        textposition='outside'
+    )
+    fig.update_layout(
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            bgcolor='rgba(0,0,0,0.5)',
+            bordercolor='rgba(255,255,255,0.2)',
+            borderwidth=1
+        ),
+        margin=dict(l=2, r=2, t=30, b=2),
+        paper_bgcolor='rgba(0,0,0,0)', 
+        plot_bgcolor='rgba(0,0,0,0)',
+        hovermode='x unified',
+        dragmode='zoom',
+        xaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)',
+                  tickangle=45),
+        yaxis=dict(showgrid=True, gridwidth=1, gridcolor='rgba(255,255,255,0.1)'),
+        modebar=dict(orientation='v')
+    )
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
 
 def meraSunburst(df=None, height=None, width=None):
-    fig = px.sunburst(df, path=['Year', 'Expense', 'Note'], values='Amount(₱)', height=height, width=width)
-    fig.update_layout(margin=dict(l=1, r=1, t=1, b=1), paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+    fig = px.sunburst(df, path=['Year', 'Expense', 'Note'], values='Amount(₱)', height=height, width=width,
+                     template="plotly_dark", color_discrete_sequence=px.colors.qualitative.Set3)
+    fig.update_traces(
+        hovertemplate='<b>%{label}</b><br>Amount: ₱%{value:,.2f}<br>Percentage: %{percentParent:.1%}<extra></extra>'
+    )
+    fig.update_layout(
+        margin=dict(l=1, r=1, t=1, b=1), 
+        paper_bgcolor='rgba(0,0,0,0)', 
+        plot_bgcolor='rgba(0,0,0,0)',
+        modebar=dict(orientation='v')
+    )
     fig.update(layout_showlegend=False)
     return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)

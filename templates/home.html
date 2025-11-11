@@ -187,15 +187,17 @@
 
             <!--  bar chart-->
              <div class="col-md-4 chart_border">
-                    <div id="bar" class="chart"></div>
+                    <h5 class="text-white mb-3 text-center">Expense Overview</h5>
+                    <div id="bar" class="chart" style="min-height: 287px;"></div>
              </div>
          </div>
          <br>
          <br>
          <div class="row ">
-             <div class="col-md-7 chart_border">
-                 <div id="stack" class="chart m-1"></div>
-             </div>
+            <div class="col-md-7 chart_border">
+                <h5 class="text-white mb-3 text-center">Category Breakdown</h5>
+                <div id="stack" class="chart m-1" style="min-height: 290px;"></div>
+            </div>
               <div class="col-md-5">
                   <div class="row m-1">
                       <div class="col-sm-12">
@@ -278,29 +280,38 @@
                  </div>
              </div>
              <div class="col-md-8 goal-panel">
-                 <div class="row justify-content-center">
-                     <h3 class="text-center text-white align-center">Data in Pie Chart</h3>
+                 <div class="row justify-content-center mb-3">
+                     <h3 class="text-center text-white align-center">
+                         <i class="material-icons" style="vertical-align: middle;">pie_chart</i>
+                         Detailed Analysis Charts
+                     </h3>
                  </div>
                  <div class="row my-3">
-                     <div class="col-md-4 d-flex justify-content-around">
-                         <div id="pie11" class="chart"></div>
+                     <div class="col-md-4 d-flex flex-column align-items-center mb-3">
+                         <h6 class="text-white mb-2">Earnings by Month</h6>
+                         <div id="pie11" class="chart" style="min-height: 240px;"></div>
                      </div>
-                     <div class="col-md-4 d-flex justify-content-around">
-                         <div id="pie22" class="chart"></div>
+                     <div class="col-md-4 d-flex flex-column align-items-center mb-3">
+                         <h6 class="text-white mb-2">Spending by Day</h6>
+                         <div id="pie22" class="chart" style="min-height: 240px;"></div>
                      </div>
-                     <div class="col-md-4 d-flex justify-content-around">
-                         <div id="pie55" class="chart"></div>
+                     <div class="col-md-4 d-flex flex-column align-items-center mb-3">
+                         <h6 class="text-white mb-2">Saving Trends</h6>
+                         <div id="pie55" class="chart" style="min-height: 240px;"></div>
                      </div>
                  </div>
                  <div class="row">
-                     <div class="col-md-4 d-flex justify-content-around">
-                         <div id="pie33" class="chart"></div>
+                     <div class="col-md-4 d-flex flex-column align-items-center mb-3">
+                         <h6 class="text-white mb-2">Investments by Year</h6>
+                         <div id="pie33" class="chart" style="min-height: 240px;"></div>
                      </div>
-                     <div class="col-md-4 d-flex justify-content-around">
-                         <div id="pie44" class="chart"></div>
+                     <div class="col-md-4 d-flex flex-column align-items-center mb-3">
+                         <h6 class="text-white mb-2">Saving Categories</h6>
+                         <div id="pie44" class="chart" style="min-height: 240px;"></div>
                      </div>
-                     <div class="col-md-4 d-flex justify-content-around">
-                         <div id="pie66" class="chart"></div>
+                     <div class="col-md-4 d-flex flex-column align-items-center mb-3">
+                         <h6 class="text-white mb-2">Investment Types</h6>
+                         <div id="pie66" class="chart" style="min-height: 240px;"></div>
                      </div>
                  </div>
              </div>
@@ -338,11 +349,26 @@
     </body>
 
     <script type='text/javascript'>
+      // Enhanced graph configuration with interactivity
+      var graphConfig = {
+        responsive: true,
+        displayModeBar: true,
+        displaylogo: false,
+        modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+        toImageButtonOptions: {
+          format: 'png',
+          filename: 'expense_chart',
+          height: 500,
+          width: 700,
+          scale: 1
+        }
+      };
+
       var graphs = {{bar | safe}};
-      Plotly.plot('bar',graphs,{});
+      Plotly.plot('bar', graphs, {}, graphConfig);
 
       var graphs4 = {{stack_bar | safe}};
-      Plotly.plot('stack',graphs4,{});
+      Plotly.plot('stack', graphs4, {}, graphConfig);
 
       var pie_graph1 = {{pie1 | safe}};
       var pie_graph2 = {{pie2 | safe}};
@@ -350,12 +376,25 @@
       var pie_graph4 = {{pie4 | safe}};
       var pie_graph5 = {{pie5 | safe}};
       var pie_graph6 = {{pie6 | safe}};
-      Plotly.plot('pie11',pie_graph1,{});
-      Plotly.plot('pie22',pie_graph2,{});
-      Plotly.plot('pie55',pie_graph5,{});
-      Plotly.plot('pie33',pie_graph3,{});
-      Plotly.plot('pie44',pie_graph4,{});
-      Plotly.plot('pie66',pie_graph6,{});
+      
+      Plotly.plot('pie11', pie_graph1, {}, graphConfig);
+      Plotly.plot('pie22', pie_graph2, {}, graphConfig);
+      Plotly.plot('pie55', pie_graph5, {}, graphConfig);
+      Plotly.plot('pie33', pie_graph3, {}, graphConfig);
+      Plotly.plot('pie44', pie_graph4, {}, graphConfig);
+      Plotly.plot('pie66', pie_graph6, {}, graphConfig);
+
+      // Add resize handler for responsive graphs
+      window.addEventListener('resize', function() {
+        Plotly.Plots.resize('bar');
+        Plotly.Plots.resize('stack');
+        Plotly.Plots.resize('pie11');
+        Plotly.Plots.resize('pie22');
+        Plotly.Plots.resize('pie33');
+        Plotly.Plots.resize('pie44');
+        Plotly.Plots.resize('pie55');
+        Plotly.Plots.resize('pie66');
+      });
 
     </script>
 </html>
