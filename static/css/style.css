@@ -1144,3 +1144,35 @@ select.form-control:focus {
   color: #222 !important;
   background: #fff !important;
 }
+
+/* Fix: make text in the "Monthly Record (₱)" card readable on light backgrounds */
+.card.card-body.panel.list,
+.card.card-body.panel.list .list,
+.card.card-body.panel.list li {
+  background: transparent;
+  color: #222 !important;        /* dark readable text for headings and labels */
+}
+
+.card.card-body.panel.list h4,
+.card.card-body.panel.list h6 {
+  color: #222 !important;
+  text-shadow: none !important;
+  font-weight: 600;
+}
+
+.card.card-body.panel.list span,
+.card.card-body.panel.list .month-values {
+  color: #e73766 !important;     /* keep numeric values visible (pink/red) */
+}
+
+/* if the month label should stand out, use a stronger color */
+.card.card-body.panel.list .month-label {
+  color: #f0b400 !important;     /* golden for "MONTH" label if present */
+}
+
+/* make sure option/inline values are not clipped */
+.card.card-body.panel.list li span,
+.card.card-body.panel.list li h6 {
+  font-size: 16px;
+  line-height: 1.3;
+}
