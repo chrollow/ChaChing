@@ -693,19 +693,51 @@ form.contFrm {
     box-shadow: 0 4px 15px 0 rgba(255, 193, 7, 0.4);
 }
 
-/* Enhanced Modal Styling */
+/* Enhanced Modal Styling - Fixed z-index and styling */
+.modal {
+    z-index: 10000 !important;
+}
+
+.modal-backdrop {
+    z-index: 9999 !important;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
 .modal-content {
     border-radius: 20px;
     border: none;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.5);
+    z-index: 10000 !important;
+    position: relative;
 }
 
 .modal-header {
     border-radius: 20px 20px 0 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1.25rem 1.5rem;
+}
+
+.modal-header h5 {
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 0;
+}
+
+.modal-header .close {
+    color: white;
+    opacity: 0.9;
+    text-shadow: none;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
 }
 
 /* Enhanced Form Controls */
@@ -885,23 +917,98 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Enhanced Modal Styling */
 .modal-dialog {
     margin: 2rem auto;
+    z-index: 10000 !important;
+    position: relative;
 }
 
 .modal-body {
     padding: 2rem;
+    color: #333;
+}
+
+.modal-body label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.modal-body .form-control {
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.modal-body .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    transform: translateY(-2px);
+}
+
+.modal-body .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px 0 rgba(102, 126, 234, 0.4);
+}
+
+.modal-body .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(102, 126, 234, 0.6);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Ensure modal is above page-bg pseudo-element */
+.page-bg::before {
+    z-index: 0;
+}
+
+.page-bg > * {
+    position: relative;
+    z-index: 1;
 }
 
 /* Better Form Styling */
 select.form-control {
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23667eea' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 35px;
 }
 
 select.form-control:focus {
     border-color: #667eea;
     box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group label .material-icons {
+    margin-right: 5px;
+    color: #667eea;
 }
 
 /* Enhanced Button Hover Effects */
@@ -976,4 +1083,64 @@ select.form-control:focus {
         margin: 0.25rem 0;
         font-size: 0.85rem;
     }
+}
+
+/* Make login/register form text visible and high contrast */
+.login-page .form-control,
+.register-page .form-control,
+.login-page .inptFld,
+.register-page .inptFld,
+.login-page label,
+.register-page label,
+.login-page .contFrm input,
+.register-page .contFrm input,
+.login-page .contFrm textarea,
+.register-page .contFrm textarea {
+  color: #222 !important;           /* dark readable text */
+  background: #fff !important;      /* white input background for contrast */
+  border-color: rgba(0,0,0,0.12) !important;
+  font-size: 16px;
+}
+
+.login-page .form-control::placeholder,
+.register-page .form-control::placeholder,
+.login-page .inptFld::placeholder,
+.register-page .inptFld::placeholder {
+  color: #6c757d !important;
+  opacity: 1;
+}
+
+/* Ensure buttons on auth pages are readable */
+.login-page .btn, .register-page .btn {
+  color: #fff !important;
+}
+
+/* If the page background is dark, ensure container text is visible */
+.login-page, .register-page {
+  color: #fff;
+}
+
+/* Login/Register readability fixes */
+.card .card-body,
+.card .card-body p,
+.card .card-body label,
+.card .card-body small,
+.card .card-body .form-check-label {
+  color: #222 !important;        /* dark readable text for labels and paragraphs */
+}
+
+/* Keep links visible and consistent */
+.card .card-body a {
+  color: #0d6efd !important;     /* bootstrap primary blue */
+  text-decoration: none;
+}
+.card .card-body a:hover {
+  text-decoration: underline;
+}
+
+/* Ensure input placeholders and values are dark inside the card */
+.card .card-body .form-control,
+.card .card-body .form-control::placeholder {
+  color: #222 !important;
+  background: #fff !important;
 }

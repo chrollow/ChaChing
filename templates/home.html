@@ -11,6 +11,16 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <!-- Google Icons -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <style>
+          /* Ensure select / input text is visible inside modal */
+          .modal .form-control {
+            color: #222 !important;
+            background-color: #fff !important;
+          }
+          .modal .form-control:focus {
+            color: #111 !important;
+          }
+        </style>
 
         <title>Expense Tracker - Home</title>
     </head>
@@ -80,76 +90,18 @@
 <!--         Table records-->
          <div  class="row mt-3">
              <div class="col-md-8">
-                 <div class="row">
+                 <div class="row mb-3">
                      <div class="col-md-4">
-                         <h4>Latest 5 Records</h4>
+                         <h4 class="text-white">
+                             <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">history</i>
+                             Latest 5 Records
+                         </h4>
                      </div>
                      <div class="col-md-8 text-right">
-                        <button type="button" data-toggle="modal" data-target="#add_record" class="btn btn-primary btn-sm">Add New Record</button>
-                     </div>
-
-                     <!-- Add new record modal-->
-                     <div class="modal top fade mt-60" id="add_record" tabindex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true" data-mdb-backdrop="true" data-mdb-keyboard="true">
-                        <div class="modal-dialog" style="width: 400px;">
-                            <div class="modal-content text-center">
-                                <div class="modal-header h5 text-white bg-success justify-content-center">
-                                    Add New  Expense Record
-                                </div>
-                                <div class="modal-body px-5">
-                                    <form class="form" method="post" action="/home/add_expense" >
-                                        <input type="date" class="form-control my-1" id="e_date" name="e_date" placeholder="Select Date" required>
-                                        <select class="form-control my-1" name="e_type" required>
-                                            <option selected hidden value="None">Expense type...</option>
-                                            <option value="Earning">Earning</option>
-                                            <option value="Spend">Spend</option>
-                                            <option value="Investment">Investment</option>
-                                            <option value="Saving">Saving</option>
-                                        </select>
-                                        <input type="number" class="form-control my-1" id="amount" name="amount" placeholder="Enter Amount" required>
-                                        <select class="form-control my-1" name="notes" required>
-                                            <option selected hidden value="None">Select...</option>
-                                            <option value="Earning">Earning</option>
-                                            <option value="Spend">Spend</option>
-                                            <option value="Investment">Investment</option>
-                                            <option value="Saving">Saving</option>
-                                            <option value="Salary">Salary</option>
-                                            <option value="Bonus">Bonus</option>
-                                            <option value="Rental Income">Rental Income</option>
-                                            <option value="Interest Income">Interest Income</option>
-                                            <option value="Dividend Income">Dividend Income</option>
-                                            <option value="Commission">Commission</option>
-                                            <option value="Gifts">Gifts</option>
-                                            <option value="House Rent">House Rent</option>
-                                            <option value="Shopping">Shopping</option>
-                                            <option value="Groceries">Groceries</option>
-                                            <option value="Goods">Goods</option>
-                                            <option value="Travel">Travel</option>
-                                            <option value="Fuel">Fuel</option>
-                                            <option value="EMI">EMI</option>
-                                            <option value="Bills">Bills</option>
-                                            <option value="Gifts">Gifts</option>
-                                            <option value="Medical">Medical</option>
-                                            <option value="Fees">Fees</option>
-                                            <option value="Vacation">Vocation</option>
-                                            <option value="Mutual Funds">Mutual Funds</option>
-                                            <option value="Bonds">Bonds</option>
-                                            <option value="ETF">ETF</option>
-                                            <option value="Fixed Deposit">Fixed Deposit</option>
-                                            <option value="Retirement Plan">Retirement Plan</option>
-                                            <option value="Real Estate">Real Estate</option>
-                                            <option value="Home Purchase">Home Purchase</option>
-                                            <option value="Child Saving">Child Saving</option>
-                                            <option value="Vacation">Vacation</option>
-                                            <option value="Health Account">Health Account</option>
-                                            <option value="Bank">Bank</option>
-                                            <option value="Others">Others</option>
-                                        </select>
-                                        <input type="submit" class="btn my-2 btn-primary btn-block" id="add" name="add" value="Submit">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        <button type="button" data-toggle="modal" data-target="#add_record" class="btn btn-primary">
+                            <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">add</i>
+                            Add New Record
+                        </button>
                      </div>
                  </div>
                  <div class="row">
@@ -342,11 +294,10 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-   <script src='https://cdn.plot.ly/plotly-latest.min.js'></script> <!-- Plotly CDN -->
-    </body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script> <!-- Plotly CDN -->
 
     <script type='text/javascript'>
       // Enhanced graph configuration with interactivity
@@ -397,4 +348,87 @@
       });
 
     </script>
+
+    <!-- modal moved here and Expense Type options added -->
+    <div class="modal fade" id="add_record" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:450px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addRecordModalLabel">
+              <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">add_circle</i>
+              Add New Expense Record
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; opacity: 0.9;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <form class="form" method="post" action="/home/add_expense">
+              <div class="form-group">
+                <label for="e_date"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">event</i>Date</label>
+                <input type="date" class="form-control" id="e_date" name="e_date" required>
+              </div>
+
+              <div class="form-group">
+                <label for="e_type"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">category</i>Expense Type</label>
+                <select class="form-control" id="e_type" name="e_type" required>
+                  <option value="" selected disabled>Select expense type...</option>
+                  <option value="Earning">Earning</option>
+                  <option value="Spend">Spend</option>
+                  <option value="Investment">Investment</option>
+                  <option value="Saving">Saving</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="amount"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">attach_money</i>Amount (₱)</label>
+                <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount" step="0.01" min="0" required>
+              </div>
+
+              <div class="form-group">
+                <label for="notes"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">note</i>Category/Note</label>
+                <select class="form-control" id="notes" name="notes" required>
+                  <option value="" selected disabled>Select category...</option>
+                  <optgroup label="Income">
+                    <option value="Salary">Salary</option>
+                    <option value="Business">Business</option>
+                    <option value="Others">Others</option>
+                  </optgroup>
+                  <optgroup label="Expenses">
+                    <option value="Fuel">Fuel</option>
+                    <option value="EMI">EMI</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Medical">Medical</option>
+                    <option value="Fees">Fees</option>
+                    <option value="Vacation">Vacation</option>
+                  </optgroup>
+                  <optgroup label="Investments">
+                    <option value="Mutual Funds">Mutual Funds</option>
+                    <option value="Bonds">Bonds</option>
+                    <option value="ETF">ETF</option>
+                    <option value="Fixed Deposit">Fixed Deposit</option>
+                    <option value="Retirement Plan">Retirement Plan</option>
+                    <option value="Real Estate">Real Estate</option>
+                  </optgroup>
+                  <optgroup label="Savings">
+                    <option value="Home Purchase">Home Purchase</option>
+                    <option value="Child Saving">Child Saving</option>
+                    <option value="Health Account">Health Account</option>
+                    <option value="Bank">Bank</option>
+                  </optgroup>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+              <div class="form-group mt-4">
+                <input type="submit" class="btn btn-primary btn-block btn-lg" id="add" name="add" value="Submit">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
 </html>
