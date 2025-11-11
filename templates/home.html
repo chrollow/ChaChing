@@ -12,14 +12,56 @@
         <!-- Google Icons -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
         <style>
-          /* Ensure select / input text is visible inside modal */
-          .modal .form-control {
+          /* Modal form control sizing / visibility fixes */
+          .modal, .modal * { box-sizing: border-box !important; }
+
+          .modal .form-control,
+          .modal select,
+          .modal input,
+          .modal textarea {
             color: #222 !important;
             background-color: #fff !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            pointer-events: auto !important;
+
+            /* normalize size so text isn't clipped */
+            font-size: 14px !important;
+            line-height: 1.2 !important;
+            padding: 0.5rem 0.75rem !important;
+            min-height: 44px !important;
+            height: auto !important;
+            border-radius: 0.45rem !important;
+            overflow: visible !important;
           }
-          .modal .form-control:focus {
+
+          /* make select dropdown and options readable */
+          .modal select {
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+          }
+          .modal select option,
+          .modal select optgroup {
             color: #111 !important;
+            background-color: #fff !important;
+            font-size: 14px !important;
           }
+
+          /* placeholder + focus */
+          .modal .form-control::placeholder { color: #6c757d !important; }
+          .modal .form-control:focus,
+          .modal select:focus,
+          .modal input:focus,
+          .modal textarea:focus {
+            color: #111 !important;
+            background-color: #fff !important;
+            box-shadow: 0 0 0 0.15rem rgba(52, 58, 64, 0.12) !important;
+          }
+
+          /* ensure custom arrows / background images don't hide text */
+          .modal .form-control { background-image: none !important; }
+
         </style>
 
         <title>Expense Tracker - Home</title>
@@ -349,7 +391,7 @@
 
     </script>
 
-    <!-- modal moved here and Expense Type options added -->
+    <!-- modal moved here and Expense Type options added (REPLACE existing modal block with this) -->
     <div class="modal fade" id="add_record" tabindex="-1" role="dialog" aria-labelledby="addRecordModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:450px;">
         <div class="modal-content">
@@ -364,15 +406,15 @@
           </div>
 
           <div class="modal-body">
-            <form class="form" method="post" action="/home/add_expense">
+            <form class="form" method="post" action="/home/add_expense" autocomplete="off">
               <div class="form-group">
                 <label for="e_date"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">event</i>Date</label>
-                <input type="date" class="form-control" id="e_date" name="e_date" required>
+                <input type="date" class="form-control" id="e_date" name="e_date" required tabindex="1" aria-required="true">
               </div>
 
               <div class="form-group">
                 <label for="e_type"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">category</i>Expense Type</label>
-                <select class="form-control" id="e_type" name="e_type" required>
+                <select class="form-control" id="e_type" name="e_type" required tabindex="2" aria-required="true">
                   <option value="" selected disabled>Select expense type...</option>
                   <option value="Earning">Earning</option>
                   <option value="Spend">Spend</option>
@@ -383,12 +425,12 @@
 
               <div class="form-group">
                 <label for="amount"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">attach_money</i>Amount (₱)</label>
-                <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount" step="0.01" min="0" required>
+                <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount" step="0.01" min="0" required tabindex="3" aria-required="true">
               </div>
 
               <div class="form-group">
                 <label for="notes"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">note</i>Category/Note</label>
-                <select class="form-control" id="notes" name="notes" required>
+                <select class="form-control" id="notes" name="notes" required tabindex="4" aria-required="true">
                   <option value="" selected disabled>Select category...</option>
                   <optgroup label="Income">
                     <option value="Salary">Salary</option>
@@ -422,13 +464,38 @@
               </div>
 
               <div class="form-group mt-4">
-                <input type="submit" class="btn btn-primary btn-block btn-lg" id="add" name="add" value="Submit">
+                <input type="submit" class="btn btn-primary btn-block btn-lg" id="add" name="add" value="Submit" tabindex="5">
               </div>
             </form>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      // Ensure modal is appended to <body> (prevents page overlays from blocking it),
+      // bump z-index and focus first field on open.
+      (function(){
+        if (window.jQuery) {
+          $(function(){
+            $('#add_record').appendTo('body');
+            $('#add_record').on('shown.bs.modal', function () {
+              $('#e_date').trigger('focus');
+            });
+            // lightweight safety z-index for environments with custom overlays
+            $('<style>.modal{z-index:20000!important}.modal-backdrop{z-index:19990!important}</style>').appendTo('head');
+          });
+        } else {
+          // fallback if jQuery missing — try vanilla DOM move and focus
+          var modal = document.getElementById('add_record');
+          if (modal && modal.parentNode !== document.body) {
+            document.body.appendChild(modal);
+          }
+          modal.addEventListener('shown.bs.modal', function(){ var d = document.getElementById('e_date'); if(d) d.focus(); });
+          var css = document.createElement('style'); css.textContent = '.modal{z-index:20000!important}.modal-backdrop{z-index:19990!important}'; document.head.appendChild(css);
+        }
+      })();
+    </script>
 
   </body>
 </html>
