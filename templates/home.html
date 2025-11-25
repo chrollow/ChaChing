@@ -61,6 +61,126 @@
 
           /* ensure custom arrows / background images don't hide text */
           .modal .form-control { background-image: none !important; }
+          
+          /* Calendar styles */
+          #calendar table {
+            border-collapse: separate;
+            border-spacing: 4px;
+            width: 100%;
+          }
+          #calendar th {
+            font-weight: 600;
+            padding: 8px 4px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+          }
+          #calendar td {
+            padding: 2px;
+            text-align: center;
+          }
+          #calendar .calendar-day {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            cursor: pointer;
+          }
+          #calendar .calendar-day:hover {
+            background-color: rgba(255,255,255,0.1);
+          }
+          #calendar .today {
+            background-color: #007bff;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0,123,255,0.5);
+          }
+          #calendar .month-header {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(0,123,255,0.2), rgba(0,123,255,0.05));
+            border-radius: 6px;
+            border: 1px solid rgba(0,123,255,0.3);
+          }
+          
+          /* Goals Notepad Styles */
+          .goal-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.2s;
+          }
+          .goal-item:hover {
+            background-color: rgba(255,255,255,0.08);
+          }
+          .goal-item.completed {
+            opacity: 0.6;
+            background-color: rgba(40,167,69,0.1);
+            border-color: rgba(40,167,69,0.3);
+          }
+          .goal-item.completed .goal-text {
+            text-decoration: line-through;
+            color: rgba(255,255,255,0.5);
+          }
+          .goal-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #28a745;
+          }
+          .goal-text {
+            flex: 1;
+            color: white;
+            font-size: 14px;
+            word-break: break-word;
+          }
+          .goal-delete {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 4px;
+            margin-left: 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+          }
+          .goal-delete:hover {
+            background-color: rgba(220,53,69,0.2);
+          }
+          #goal_input::placeholder {
+            color: rgba(255,255,255,0.5);
+          }
+          #goal_input:focus {
+            background-color: rgba(255,255,255,0.15);
+            border-color: rgba(0,123,255,0.5);
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+            color: white;
+          }
+          
+          /* Savings Goal Tracker Styles */
+          #savings_goal_tracker input:focus,
+          #savings_goal_setup input:focus {
+            background-color: rgba(255,255,255,0.15);
+            border-color: rgba(0,123,255,0.5);
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+            color: white;
+            outline: none;
+          }
+          #savings_goal_tracker input::placeholder,
+          #savings_goal_setup input::placeholder {
+            color: rgba(255,255,255,0.5);
+          }
+          .progress-bar {
+            transition: width 0.6s ease;
+          }
 
         </style>
 
@@ -136,7 +256,7 @@
                      <div class="col-md-4">
                          <h4 class="text-white">
                              <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">history</i>
-                             Latest 5 Records
+                             Latest Records
                          </h4>
                      </div>
                      <div class="col-md-8 text-right">
@@ -146,30 +266,99 @@
                         </button>
                      </div>
                  </div>
+                 
+                 <!-- Filter and Search Section -->
+                 <div class="card mb-3" style="background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                     <div class="card-body p-3">
+                         <div class="row">
+                             <div class="col-md-12 mb-2">
+                                 <h6 class="text-white">
+                                     <i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">filter_list</i>
+                                     Filter & Search
+                                 </h6>
+                             </div>
+                         </div>
+                         <div class="row">
+                             <div class="col-md-6 mb-2">
+                                 <label class="text-white" style="font-size: 12px;">Date Range</label>
+                                 <div class="input-group input-group-sm">
+                                     <input type="date" id="start_date" class="form-control" placeholder="Start Date">
+                                     <input type="date" id="end_date" class="form-control" placeholder="End Date">
+                                 </div>
+                             </div>
+                             <div class="col-md-3 mb-2">
+                                 <label class="text-white" style="font-size: 12px;">Category</label>
+                                 <select id="filter_category" class="form-control form-control-sm">
+                                     <option value="">All Categories</option>
+                                     <option value="Earning">Earning</option>
+                                     <option value="Spend">Spend</option>
+                                     <option value="Investment">Investment</option>
+                                     <option value="Saving">Saving</option>
+                                 </select>
+                             </div>
+                             <div class="col-md-3 mb-2">
+                                 <label class="text-white" style="font-size: 12px;">Amount Range</label>
+                                 <div class="input-group input-group-sm">
+                                     <input type="number" id="min_amount" class="form-control" placeholder="Min" step="0.01">
+                                     <input type="number" id="max_amount" class="form-control" placeholder="Max" step="0.01">
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="row mt-2">
+                             <div class="col-md-9 mb-2">
+                                 <label class="text-white" style="font-size: 12px;">Search Keywords</label>
+                                 <input type="text" id="search_keyword" class="form-control form-control-sm" placeholder="Search in notes...">
+                             </div>
+                             <div class="col-md-3 mb-2">
+                                 <label class="text-white" style="font-size: 12px;">&nbsp;</label>
+                                 <button id="apply_filter" class="btn btn-success btn-sm btn-block">
+                                     <i class="material-icons" style="vertical-align: middle; font-size: 16px;">search</i> Apply
+                                 </button>
+                                 <button id="clear_filter" class="btn btn-secondary btn-sm btn-block mt-1">
+                                     <i class="material-icons" style="vertical-align: middle; font-size: 16px;">clear</i> Clear
+                                 </button>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
                  <div class="row">
                      <div class="col-md-12">
-                         <table class="table table-dark">
-                          <thead>
-                            <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">Date</th>
-                              <th scope="col">Expense</th>
-                              <th scope="col">Amount</th>
-                              <th scope="col">Note</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          {% for row in table_data %}
-                            <tr>
-                              <th scope="row">{{ loop.index }}</th>
-                              <td>{{ row[2] }}</td>
-                              <td>{{ row[3] }}</td>
-                              <td>{{ row[4] }}</td>
-                              <td>{{ row[5] }}</td>
-                            </tr>
-                          {% endfor %}
-                          </tbody>
-                         </table>
+                         <div id="record_count" class="text-white mb-2" style="font-size: 14px;">
+                             Showing <span id="displayed_count">{{ table_data|length }}</span> records
+                         </div>
+                         <div style="max-height: 400px; overflow-y: auto;">
+                             <table class="table table-dark table-hover" id="records_table">
+                              <thead style="position: sticky; top: 0; z-index: 10; background-color: #212529;">
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Date</th>
+                                  <th scope="col">Expense</th>
+                                  <th scope="col">Amount</th>
+                                  <th scope="col">Note</th>
+                                  <th scope="col">Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody id="records_tbody">
+                              {% for row in table_data %}
+                                <tr data-id="{{ row[0] }}">
+                                  <th scope="row">{{ loop.index }}</th>
+                                  <td>{{ row[2] }}</td>
+                                  <td>{{ row[3] }}</td>
+                                  <td>{{ row[4] | currency }}</td>
+                                  <td>{{ row[5] }}</td>
+                                  <td>
+                                    <button class="btn btn-sm btn-warning edit-btn" data-id="{{ row[0] }}" data-date="{{ row[2] }}" data-expense="{{ row[3] }}" data-amount="{{ row[4] }}" data-note="{{ row[5] }}" title="Edit">
+                                      <i class="material-icons" style="font-size: 16px; vertical-align: middle;">edit</i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger delete-btn" data-id="{{ row[0] }}" title="Delete">
+                                      <i class="material-icons" style="font-size: 16px; vertical-align: middle;">delete</i>
+                                    </button>
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                              </tbody>
+                             </table>
+                         </div>
                      </div>
                  </div>
              </div>
@@ -179,41 +368,29 @@
          </div>
          {% else %}
 
-            <!--  bar chart-->
-             <div class="col-md-4 chart_border">
-                    <h5 class="text-white mb-3 text-center">Expense Overview</h5>
-                    <div id="bar" class="chart" style="min-height: 287px;"></div>
-             </div>
-         </div>
-         <br>
-         <br>
-         <div class="row ">
-            <div class="col-md-7 chart_border">
-                <h5 class="text-white mb-3 text-center">Category Breakdown</h5>
-                <div id="stack" class="chart m-1" style="min-height: 290px;"></div>
-            </div>
-              <div class="col-md-5">
+            <!-- Monthly Record and Calendar -->
+             <div class="col-md-4">
                   <div class="row m-1">
                       <div class="col-sm-12">
-                          <div class="card card-body m-1 p-1 panel list">
-                              <h4 align="center">Monthly Record (₱)</h4>
-                              <li>
-                                  <h5 class="text-warning">Month</h5>
-                                  <span>Income</span>
-                                  <span>Spend</span>
-                                  <span>Invest</span>
-                                  <span>Saving</span>
-                              </li>
-
-                              {% for month in monthly_data %}
-                              <li>
-                                  <h6>{{ month['Month'] }}</h6>
-                                  <span>{{ month['Earning'] }}</span>
-                                  <span>{{ month['Spend'] }}</span>
-                                  <span>{{ month['Investment'] }}</span>
-                                  <span>{{ month['Saving'] }}</span>
-                              </li>
-                              {% endfor %}
+                          <div class="card card-body m-1 p-2" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);">
+                              <h5 class="text-white text-center mb-3">
+                                  <i class="material-icons" style="vertical-align: middle; font-size: 20px; margin-right: 5px;">trending_up</i>
+                                  Monthly Trends
+                              </h5>
+                              <div id="monthly_line_chart" style="min-height: 300px;"></div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <!-- Calendar Widget -->
+                  <div class="row m-1 mt-3">
+                      <div class="col-sm-12">
+                          <div class="card card-body m-1 p-3" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;">
+                              <h5 class="text-white text-center mb-3">
+                                  <i class="material-icons" style="vertical-align: middle; font-size: 20px; margin-right: 5px;">calendar_today</i>
+                                  Calendar
+                              </h5>
+                              <div id="calendar" class="text-white"></div>
                           </div>
                       </div>
                   </div>
@@ -239,8 +416,99 @@
 
          <div class="row">
              <div class="col-md-4">
+                 <!-- Personal Goals Notepad -->
+                 <div class="card mb-3" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;">
+                     <div class="card-body p-3">
+                         <h5 class="text-white mb-3">
+                             <i class="material-icons" style="vertical-align: middle; font-size: 20px; margin-right: 5px;">flag</i>
+                             My Goals
+                         </h5>
+                         <div class="input-group mb-3">
+                             <input type="text" id="goal_input" class="form-control" placeholder="Enter your goal..." style="background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                             <div class="input-group-append">
+                                 <button class="btn btn-primary" id="add_goal_btn" type="button">
+                                     <i class="material-icons" style="font-size: 18px; vertical-align: middle;">add</i>
+                                 </button>
+                             </div>
+                         </div>
+                         <div id="goals_list" style="max-height: 250px; overflow-y: auto;">
+                             <!-- Goals will be dynamically added here -->
+                         </div>
+                     </div>
+                 </div>
+                 
+                 <!-- Savings Goal Tracker -->                 <div class="card mb-3" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px;">
+                     <div class="card-body p-3">
+                         <h5 class="text-white mb-3">
+                             <i class="material-icons" style="vertical-align: middle; font-size: 20px; margin-right: 5px;">savings</i>
+                             Savings Goal Tracker
+                         </h5>
+                         
+                         <div id="savings_goal_setup">
+                             <div class="form-group mb-2">
+                                 <label class="text-white" style="font-size: 13px;">Goal Name</label>
+                                 <input type="text" id="goal_name" class="form-control form-control-sm" placeholder="e.g., Emergency Fund" style="background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                             </div>
+                             <div class="form-group mb-2">
+                                 <label class="text-white" style="font-size: 13px;">Target Amount (₱)</label>
+                                 <input type="number" id="goal_target" class="form-control form-control-sm" placeholder="e.g., 100000" step="100" style="background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                             </div>
+                             <div class="form-group mb-2">
+                                 <label class="text-white" style="font-size: 13px;">Current Savings (₱)</label>
+                                 <input type="number" id="goal_current" class="form-control form-control-sm" placeholder="e.g., 25000" step="100" style="background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                             </div>
+                             <button class="btn btn-success btn-sm btn-block" id="set_goal_btn">
+                                 <i class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 5px;">check_circle</i>
+                                 Set Goal
+                             </button>
+                         </div>
+                         
+                         <div id="savings_goal_tracker" style="display: none;">
+                             <div class="mb-3 p-3" style="background-color: rgba(0,123,255,0.1); border-radius: 6px; border: 1px solid rgba(0,123,255,0.3);">
+                                 <h6 class="text-white mb-2" id="tracker_goal_name" style="font-size: 15px;"></h6>
+                                 <div class="d-flex justify-content-between mb-2">
+                                     <span class="text-white-50" style="font-size: 12px;">Current</span>
+                                     <span class="text-white font-weight-bold" id="tracker_current">₱0</span>
+                                 </div>
+                                 <div class="progress mb-2" style="height: 25px; background-color: rgba(255,255,255,0.1);">
+                                     <div id="tracker_progress_bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="font-size: 12px; font-weight: bold;"></div>
+                                 </div>
+                                 <div class="d-flex justify-content-between mb-3">
+                                     <span class="text-white-50" style="font-size: 12px;">Target</span>
+                                     <span class="text-white font-weight-bold" id="tracker_target">₱0</span>
+                                 </div>
+                                 <div class="alert alert-info p-2 mb-2" style="font-size: 12px; background-color: rgba(23,162,184,0.2); border-color: rgba(23,162,184,0.4);">
+                                     <i class="material-icons" style="font-size: 16px; vertical-align: middle; margin-right: 5px;">info</i>
+                                     <span id="tracker_remaining"></span>
+                                 </div>
+                             </div>
+                             
+                             <div class="form-group mb-2">
+                                 <label class="text-white" style="font-size: 13px;">Add/Update Savings (₱)</label>
+                                 <div class="input-group input-group-sm">
+                                     <input type="number" id="add_savings" class="form-control" placeholder="Amount" step="100" style="background-color: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                                     <div class="input-group-append">
+                                         <button class="btn btn-primary" id="update_savings_btn" type="button">
+                                             <i class="material-icons" style="font-size: 16px; vertical-align: middle;">add</i>
+                                         </button>
+                                     </div>
+                                 </div>
+                             </div>
+                             
+                             <div class="d-flex">
+                                 <button class="btn btn-sm btn-warning flex-fill mr-1" id="edit_goal_btn">
+                                     <i class="material-icons" style="font-size: 14px; vertical-align: middle;">edit</i> Edit
+                                 </button>
+                                 <button class="btn btn-sm btn-danger flex-fill ml-1" id="reset_goal_btn">
+                                     <i class="material-icons" style="font-size: 14px; vertical-align: middle;">refresh</i> Reset
+                                 </button>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 
                  <div class="goals">
-                     <h5>Monthly Goals <h6>(w.r.t. last month)</h6></h5>
+                
                      {% for goal in goals %}
                         <div class="goal-panel goal">
 
@@ -357,12 +625,6 @@
         }
       };
 
-      var graphs = {{bar | safe}};
-      Plotly.plot('bar', graphs, {}, graphConfig);
-
-      var graphs4 = {{stack_bar | safe}};
-      Plotly.plot('stack', graphs4, {}, graphConfig);
-
       var pie_graph1 = {{pie1 | safe}};
       var pie_graph2 = {{pie2 | safe}};
       var pie_graph3 = {{pie3 | safe}};
@@ -379,8 +641,6 @@
 
       // Add resize handler for responsive graphs
       window.addEventListener('resize', function() {
-        Plotly.Plots.resize('bar');
-        Plotly.Plots.resize('stack');
         Plotly.Plots.resize('pie11');
         Plotly.Plots.resize('pie22');
         Plotly.Plots.resize('pie33');
@@ -388,7 +648,543 @@
         Plotly.Plots.resize('pie55');
         Plotly.Plots.resize('pie66');
       });
+      
+      // Calendar functionality
+      function renderCalendar() {
+          const calendar = document.getElementById('calendar');
+          const today = new Date();
+          const currentMonth = today.getMonth();
+          const currentYear = today.getFullYear();
+          const currentDay = today.getDate();
+          
+          const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                            'July', 'August', 'September', 'October', 'November', 'December'];
+          const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+          const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+          
+          let calendarHTML = `
+              <div class="month-header" style="text-align: center;">
+                  <strong>${monthNames[currentMonth]} ${currentYear}</strong>
+              </div>
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Sun</th>
+                          <th>Mon</th>
+                          <th>Tue</th>
+                          <th>Wed</th>
+                          <th>Thu</th>
+                          <th>Fri</th>
+                          <th>Sat</th>
+                      </tr>
+                  </thead>
+                  <tbody>`;
+          
+          let dayCounter = 1;
+          for (let week = 0; week < 6; week++) {
+              calendarHTML += '<tr>';
+              for (let day = 0; day < 7; day++) {
+                  if ((week === 0 && day < firstDay) || dayCounter > daysInMonth) {
+                      calendarHTML += '<td></td>';
+                  } else {
+                      const isToday = dayCounter === currentDay;
+                      const todayClass = isToday ? ' today' : '';
+                      calendarHTML += `<td><span class="calendar-day${todayClass}">${dayCounter}</span></td>`;
+                      dayCounter++;
+                  }
+              }
+              calendarHTML += '</tr>';
+              if (dayCounter > daysInMonth) break;
+          }
+          
+          calendarHTML += '</tbody></table>';
+          calendar.innerHTML = calendarHTML;
+      }
+      
+      // Render calendar on page load
+      renderCalendar();
+      
+      // Render monthly line chart
+      function renderMonthlyLineChart() {
+          const monthlyData = {{ monthly_data | tojson | safe }};
+          
+          if (!monthlyData || monthlyData.length === 0) {
+              document.getElementById('monthly_line_chart').innerHTML = 
+                  '<p class="text-center text-white-50" style="padding: 50px 0;">No data available</p>';
+              return;
+          }
+          
+          const months = monthlyData.map(d => d.Month).reverse();
+          const earning = monthlyData.map(d => parseFloat(d.Earning) || 0).reverse();
+          const spend = monthlyData.map(d => parseFloat(d.Spend) || 0).reverse();
+          const investment = monthlyData.map(d => parseFloat(d.Investment) || 0).reverse();
+          const saving = monthlyData.map(d => parseFloat(d.Saving) || 0).reverse();
+          
+          const trace1 = {
+              x: months,
+              y: earning,
+              name: 'Earning',
+              type: 'scatter',
+              mode: 'lines+markers',
+              line: { color: '#28a745', width: 3 },
+              marker: { size: 8 }
+          };
+          
+          const trace2 = {
+              x: months,
+              y: spend,
+              name: 'Spend',
+              type: 'scatter',
+              mode: 'lines+markers',
+              line: { color: '#dc3545', width: 3 },
+              marker: { size: 8 }
+          };
+          
+          const trace3 = {
+              x: months,
+              y: investment,
+              name: 'Investment',
+              type: 'scatter',
+              mode: 'lines+markers',
+              line: { color: '#ffc107', width: 3 },
+              marker: { size: 8 }
+          };
+          
+          const trace4 = {
+              x: months,
+              y: saving,
+              name: 'Saving',
+              type: 'scatter',
+              mode: 'lines+markers',
+              line: { color: '#17a2b8', width: 3 },
+              marker: { size: 8 }
+          };
+          
+          const layout = {
+              template: 'plotly_dark',
+              margin: { l: 40, r: 20, t: 10, b: 40 },
+              paper_bgcolor: 'rgba(0,0,0,0)',
+              plot_bgcolor: 'rgba(0,0,0,0)',
+              legend: {
+                  orientation: 'h',
+                  x: 0,
+                  y: -0.2,
+                  bgcolor: 'rgba(0,0,0,0.3)',
+                  bordercolor: 'rgba(255,255,255,0.2)',
+                  borderwidth: 1
+              },
+              xaxis: {
+                  showgrid: true,
+                  gridwidth: 1,
+                  gridcolor: 'rgba(255,255,255,0.1)'
+              },
+              yaxis: {
+                  showgrid: true,
+                  gridwidth: 1,
+                  gridcolor: 'rgba(255,255,255,0.1)',
+                  title: 'Amount (₱)'
+              },
+              hovermode: 'x unified'
+          };
+          
+          const config = {
+              responsive: true,
+              displayModeBar: true,
+              displaylogo: false,
+              modeBarButtonsToRemove: ['lasso2d', 'select2d']
+          };
+          
+          Plotly.newPlot('monthly_line_chart', [trace1, trace2, trace3, trace4], layout, config);
+      }
+      
+      renderMonthlyLineChart();
+      
+      // Personal Goals Notepad Functionality
+      let userGoals = JSON.parse(localStorage.getItem('userGoals')) || [];
+      
+      function renderGoals() {
+          const goalsList = document.getElementById('goals_list');
+          
+          if (userGoals.length === 0) {
+              goalsList.innerHTML = '<p class="text-center text-white-50" style="padding: 20px 0; font-size: 13px;">No goals yet. Add your first goal!</p>';
+              return;
+          }
+          
+          goalsList.innerHTML = userGoals.map((goal, index) => `
+              <div class="goal-item ${goal.completed ? 'completed' : ''}">
+                  <input type="checkbox" class="goal-checkbox" 
+                         ${goal.completed ? 'checked' : ''} 
+                         onchange="toggleGoal(${index})">
+                  <span class="goal-text">${escapeHtml(goal.text)}</span>
+                  <button class="goal-delete" onclick="deleteGoal(${index})" title="Delete goal">
+                      <i class="material-icons" style="font-size: 18px;">delete</i>
+                  </button>
+              </div>
+          `).join('');
+      }
+      
+      function escapeHtml(text) {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
+      }
+      
+      function addGoal() {
+          const input = document.getElementById('goal_input');
+          const goalText = input.value.trim();
+          
+          if (goalText === '') {
+              return;
+          }
+          
+          userGoals.unshift({
+              text: goalText,
+              completed: false,
+              createdAt: new Date().toISOString()
+          });
+          
+          localStorage.setItem('userGoals', JSON.stringify(userGoals));
+          input.value = '';
+          renderGoals();
+      }
+      
+      function toggleGoal(index) {
+          userGoals[index].completed = !userGoals[index].completed;
+          localStorage.setItem('userGoals', JSON.stringify(userGoals));
+          renderGoals();
+      }
+      
+      function deleteGoal(index) {
+          if (confirm('Are you sure you want to delete this goal?')) {
+              userGoals.splice(index, 1);
+              localStorage.setItem('userGoals', JSON.stringify(userGoals));
+              renderGoals();
+          }
+      }
+      
+      // Event listeners
+      document.getElementById('add_goal_btn').addEventListener('click', addGoal);
+      document.getElementById('goal_input').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+              addGoal();
+          }
+      });
+      
+      // Render goals on page load
+      renderGoals();
+      
+      // Savings Goal Tracker Functionality
+      let savingsGoal = JSON.parse(localStorage.getItem('savingsGoal')) || null;
+      
+      function formatCurrencyDisplay(amount) {
+          return '₱' + parseFloat(amount).toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      }
+      
+      function renderSavingsGoal() {
+          const setupSection = document.getElementById('savings_goal_setup');
+          const trackerSection = document.getElementById('savings_goal_tracker');
+          
+          if (savingsGoal) {
+              setupSection.style.display = 'none';
+              trackerSection.style.display = 'block';
+              
+              const percentage = Math.min((savingsGoal.current / savingsGoal.target) * 100, 100);
+              const remaining = Math.max(savingsGoal.target - savingsGoal.current, 0);
+              
+              document.getElementById('tracker_goal_name').textContent = savingsGoal.name;
+              document.getElementById('tracker_current').textContent = formatCurrencyDisplay(savingsGoal.current);
+              document.getElementById('tracker_target').textContent = formatCurrencyDisplay(savingsGoal.target);
+              
+              const progressBar = document.getElementById('tracker_progress_bar');
+              progressBar.style.width = percentage + '%';
+              progressBar.textContent = percentage.toFixed(1) + '%';
+              
+              // Change progress bar color based on progress
+              if (percentage >= 100) {
+                  progressBar.className = 'progress-bar progress-bar-striped bg-success';
+                  document.getElementById('tracker_remaining').innerHTML = '<strong>🎉 Goal Achieved!</strong>';
+              } else if (percentage >= 75) {
+                  progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-info';
+                  document.getElementById('tracker_remaining').textContent = 'Remaining: ' + formatCurrencyDisplay(remaining);
+              } else if (percentage >= 50) {
+                  progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-primary';
+                  document.getElementById('tracker_remaining').textContent = 'Remaining: ' + formatCurrencyDisplay(remaining);
+              } else if (percentage >= 25) {
+                  progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-warning';
+                  document.getElementById('tracker_remaining').textContent = 'Remaining: ' + formatCurrencyDisplay(remaining);
+              } else {
+                  progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-danger';
+                  document.getElementById('tracker_remaining').textContent = 'Remaining: ' + formatCurrencyDisplay(remaining);
+              }
+          } else {
+              setupSection.style.display = 'block';
+              trackerSection.style.display = 'none';
+          }
+      }
+      
+      function setSavingsGoal() {
+          const name = document.getElementById('goal_name').value.trim();
+          const target = parseFloat(document.getElementById('goal_target').value);
+          const current = parseFloat(document.getElementById('goal_current').value) || 0;
+          
+          if (!name || !target || target <= 0) {
+              alert('Please enter a valid goal name and target amount.');
+              return;
+          }
+          
+          if (current < 0) {
+              alert('Current savings cannot be negative.');
+              return;
+          }
+          
+          savingsGoal = {
+              name: name,
+              target: target,
+              current: current,
+              createdAt: new Date().toISOString()
+          };
+          
+          localStorage.setItem('savingsGoal', JSON.stringify(savingsGoal));
+          
+          // Clear inputs
+          document.getElementById('goal_name').value = '';
+          document.getElementById('goal_target').value = '';
+          document.getElementById('goal_current').value = '';
+          
+          renderSavingsGoal();
+      }
+      
+      function updateSavings() {
+          const addAmount = parseFloat(document.getElementById('add_savings').value);
+          
+          if (!addAmount || addAmount <= 0) {
+              alert('Please enter a valid amount.');
+              return;
+          }
+          
+          savingsGoal.current += addAmount;
+          localStorage.setItem('savingsGoal', JSON.stringify(savingsGoal));
+          
+          document.getElementById('add_savings').value = '';
+          renderSavingsGoal();
+          
+          // Show celebration if goal reached
+          if (savingsGoal.current >= savingsGoal.target) {
+              setTimeout(() => {
+                  alert('🎉 Congratulations! You have reached your savings goal!');
+              }, 500);
+          }
+      }
+      
+      function editSavingsGoal() {
+          if (savingsGoal) {
+              document.getElementById('goal_name').value = savingsGoal.name;
+              document.getElementById('goal_target').value = savingsGoal.target;
+              document.getElementById('goal_current').value = savingsGoal.current;
+              
+              document.getElementById('savings_goal_setup').style.display = 'block';
+              document.getElementById('savings_goal_tracker').style.display = 'none';
+          }
+      }
+      
+      function resetSavingsGoal() {
+          if (confirm('Are you sure you want to reset your savings goal? This action cannot be undone.')) {
+              savingsGoal = null;
+              localStorage.removeItem('savingsGoal');
+              renderSavingsGoal();
+          }
+      }
+      
+      // Event listeners for savings goal tracker
+      document.getElementById('set_goal_btn').addEventListener('click', setSavingsGoal);
+      document.getElementById('update_savings_btn').addEventListener('click', updateSavings);
+      document.getElementById('edit_goal_btn').addEventListener('click', editSavingsGoal);
+      document.getElementById('reset_goal_btn').addEventListener('click', resetSavingsGoal);
+      
+      // Allow Enter key for setting goal
+      document.getElementById('goal_name').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') setSavingsGoal();
+      });
+      document.getElementById('goal_target').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') setSavingsGoal();
+      });
+      document.getElementById('goal_current').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') setSavingsGoal();
+      });
+      document.getElementById('add_savings').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') updateSavings();
+      });
+      
+      // Render savings goal on page load
+      renderSavingsGoal();
 
+    </script>
+
+    <script>
+      // Filter and Search functionality
+      $(document).ready(function() {
+          
+          function applyFilters() {
+              var startDate = $('#start_date').val();
+              var endDate = $('#end_date').val();
+              var category = $('#filter_category').val();
+              var minAmount = $('#min_amount').val();
+              var maxAmount = $('#max_amount').val();
+              var keyword = $('#search_keyword').val().toLowerCase();
+              
+              $.ajax({
+                  url: '/home/filter_records',
+                  method: 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify({
+                      start_date: startDate,
+                      end_date: endDate,
+                      category: category,
+                      min_amount: minAmount,
+                      max_amount: maxAmount,
+                      keyword: keyword
+                  }),
+                  success: function(response) {
+                      updateTable(response.records);
+                      $('#displayed_count').text(response.count);
+                  },
+                  error: function(xhr, status, error) {
+                      console.error('Filter error:', error);
+                      alert('Error applying filters. Please try again.');
+                  }
+              });
+          }
+          
+          function updateTable(records) {
+              var tbody = $('#records_tbody');
+              tbody.empty();
+              
+              if (records.length === 0) {
+                  tbody.append('<tr><td colspan="6" class="text-center">No records found matching the criteria</td></tr>');
+              } else {
+                  records.forEach(function(row, index) {
+                      var tr = $('<tr>').attr('data-id', row[0]);
+                      tr.append($('<th>').attr('scope', 'row').text(index + 1));
+                      tr.append($('<td>').text(row[2]));
+                      tr.append($('<td>').text(row[3]));
+                      tr.append($('<td>').text(formatCurrency(row[4])));
+                      tr.append($('<td>').text(row[5]));
+                      
+                      var actionTd = $('<td>');
+                      var editBtn = $('<button>').addClass('btn btn-sm btn-warning edit-btn')
+                          .attr('data-id', row[0])
+                          .attr('data-date', row[2])
+                          .attr('data-expense', row[3])
+                          .attr('data-amount', row[4])
+                          .attr('data-note', row[5])
+                          .attr('title', 'Edit')
+                          .html('<i class="material-icons" style="font-size: 16px; vertical-align: middle;">edit</i>');
+                      
+                      var deleteBtn = $('<button>').addClass('btn btn-sm btn-danger delete-btn')
+                          .attr('data-id', row[0])
+                          .attr('title', 'Delete')
+                          .html('<i class="material-icons" style="font-size: 16px; vertical-align: middle;">delete</i>');
+                      
+                      actionTd.append(editBtn).append(' ').append(deleteBtn);
+                      tr.append(actionTd);
+                      tbody.append(tr);
+                  });
+              }
+          }
+          
+          function formatCurrency(value) {
+              var num = parseFloat(value);
+              if (isNaN(num)) return value;
+              return '₱' + num.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          }
+          
+          $('#apply_filter').click(function() {
+              applyFilters();
+          });
+          
+          $('#clear_filter').click(function() {
+              $('#start_date').val('');
+              $('#end_date').val('');
+              $('#filter_category').val('');
+              $('#min_amount').val('');
+              $('#max_amount').val('');
+              $('#search_keyword').val('');
+              applyFilters();
+          });
+          
+          // Apply filter on Enter key in search box
+          $('#search_keyword').keypress(function(e) {
+              if (e.which === 13) {
+                  applyFilters();
+              }
+          });
+          
+          // Edit button handler
+          $(document).on('click', '.edit-btn', function() {
+              var id = $(this).data('id');
+              var date = $(this).data('date');
+              var expense = $(this).data('expense');
+              var amount = $(this).data('amount');
+              var note = $(this).data('note');
+              
+              $('#edit_id').val(id);
+              $('#edit_date').val(date);
+              $('#edit_type').val(expense);
+              $('#edit_amount').val(amount);
+              $('#edit_notes').val(note);
+              
+              $('#edit_record').modal('show');
+          });
+          
+          // Edit form submission
+          $('#edit_form').submit(function(e) {
+              e.preventDefault();
+              
+              var formData = {
+                  id: $('#edit_id').val(),
+                  date: $('#edit_date').val(),
+                  expense: $('#edit_type').val(),
+                  amount: $('#edit_amount').val(),
+                  note: $('#edit_notes').val()
+              };
+              
+              $.ajax({
+                  url: '/home/edit_expense',
+                  method: 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify(formData),
+                  success: function(response) {
+                      $('#edit_record').modal('hide');
+                      alert('Record updated successfully!');
+                      location.reload();
+                  },
+                  error: function(xhr, status, error) {
+                      alert('Error updating record: ' + error);
+                  }
+              });
+          });
+          
+          // Delete button handler
+          $(document).on('click', '.delete-btn', function() {
+              var id = $(this).data('id');
+              
+              if (confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
+                  $.ajax({
+                      url: '/home/delete_expense',
+                      method: 'POST',
+                      contentType: 'application/json',
+                      data: JSON.stringify({ id: id }),
+                      success: function(response) {
+                          alert('Record deleted successfully!');
+                          location.reload();
+                      },
+                      error: function(xhr, status, error) {
+                          alert('Error deleting record: ' + error);
+                      }
+                  });
+              }
+          });
+      });
     </script>
 
     <!-- modal moved here and Expense Type options added (REPLACE existing modal block with this) -->
@@ -472,6 +1268,89 @@
       </div>
     </div>
 
+    <!-- Edit Record Modal -->
+    <div class="modal fade" id="edit_record" tabindex="-1" role="dialog" aria-labelledby="editRecordModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:450px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editRecordModalLabel">
+              <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">edit</i>
+              Edit Expense Record
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; opacity: 0.9;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <form id="edit_form" autocomplete="off">
+              <input type="hidden" id="edit_id" name="edit_id">
+              
+              <div class="form-group">
+                <label for="edit_date"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">event</i>Date</label>
+                <input type="date" class="form-control" id="edit_date" name="edit_date" required tabindex="1" aria-required="true">
+              </div>
+
+              <div class="form-group">
+                <label for="edit_type"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">category</i>Expense Type</label>
+                <select class="form-control" id="edit_type" name="edit_type" required tabindex="2" aria-required="true">
+                  <option value="" disabled>Select expense type...</option>
+                  <option value="Earning">Earning</option>
+                  <option value="Spend">Spend</option>
+                  <option value="Investment">Investment</option>
+                  <option value="Saving">Saving</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="edit_amount"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">attach_money</i>Amount (₱)</label>
+                <input type="number" class="form-control" id="edit_amount" name="edit_amount" placeholder="Enter amount" step="0.01" min="0" required tabindex="3" aria-required="true">
+              </div>
+
+              <div class="form-group">
+                <label for="edit_notes"><i class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">note</i>Category/Note</label>
+                <select class="form-control" id="edit_notes" name="edit_notes" required tabindex="4" aria-required="true">
+                  <option value="" disabled>Select category...</option>
+                  <optgroup label="Income">
+                    <option value="Salary">Salary</option>
+                    <option value="Business">Business</option>
+                    <option value="Others">Others</option>
+                  </optgroup>
+                  <optgroup label="Expenses">
+                    <option value="Fuel">Fuel</option>
+                    <option value="EMI">EMI</option>
+                    <option value="Bills">Bills</option>
+                    <option value="Medical">Medical</option>
+                    <option value="Fees">Fees</option>
+                    <option value="Vacation">Vacation</option>
+                  </optgroup>
+                  <optgroup label="Investments">
+                    <option value="Mutual Funds">Mutual Funds</option>
+                    <option value="Bonds">Bonds</option>
+                    <option value="ETF">ETF</option>
+                    <option value="Fixed Deposit">Fixed Deposit</option>
+                    <option value="Retirement Plan">Retirement Plan</option>
+                    <option value="Real Estate">Real Estate</option>
+                  </optgroup>
+                  <optgroup label="Savings">
+                    <option value="Home Purchase">Home Purchase</option>
+                    <option value="Child Saving">Child Saving</option>
+                    <option value="Health Account">Health Account</option>
+                    <option value="Bank">Bank</option>
+                  </optgroup>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+              <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary btn-block btn-lg" tabindex="5">Update Record</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       // Ensure modal is appended to <body> (prevents page overlays from blocking it),
       // bump z-index and focus first field on open.
@@ -479,8 +1358,12 @@
         if (window.jQuery) {
           $(function(){
             $('#add_record').appendTo('body');
+            $('#edit_record').appendTo('body');
             $('#add_record').on('shown.bs.modal', function () {
               $('#e_date').trigger('focus');
+            });
+            $('#edit_record').on('shown.bs.modal', function () {
+              $('#edit_date').trigger('focus');
             });
             // lightweight safety z-index for environments with custom overlays
             $('<style>.modal{z-index:20000!important}.modal-backdrop{z-index:19990!important}</style>').appendTo('head');
@@ -491,7 +1374,12 @@
           if (modal && modal.parentNode !== document.body) {
             document.body.appendChild(modal);
           }
+          var editModal = document.getElementById('edit_record');
+          if (editModal && editModal.parentNode !== document.body) {
+            document.body.appendChild(editModal);
+          }
           modal.addEventListener('shown.bs.modal', function(){ var d = document.getElementById('e_date'); if(d) d.focus(); });
+          editModal.addEventListener('shown.bs.modal', function(){ var d = document.getElementById('edit_date'); if(d) d.focus(); });
           var css = document.createElement('style'); css.textContent = '.modal{z-index:20000!important}.modal-backdrop{z-index:19990!important}'; document.head.appendChild(css);
         }
       })();

@@ -142,10 +142,13 @@ def home():
         query = """select * from user_login where user_id = {} """.format(session['user_id'])
         userdata = support.execute_query("search", query)
 
-        table_query = """select * from user_expenses where user_id = {} order by pdate desc""".format(
+        table_query = """select * from user_expenses where user_id = {} order by pdate desc limit 20""".format(
             session['user_id'])
         table_data = support.execute_query("search", table_query)
-        df = pd.DataFrame(table_data, columns=['#', 'User_Id', 'Date', 'Expense', 'Amount', 'Note'])
+        df_query = """select * from user_expenses where user_id = {} order by pdate desc""".format(
+            session['user_id'])
+        df_data = support.execute_query("search", df_query)
+        df = pd.DataFrame(df_data, columns=['#', 'User_Id', 'Date', 'Expense', 'Amount', 'Note'])
 
         df = support.generate_df(df)
         try:
@@ -191,7 +194,7 @@ def home():
                                monthly_data=monthly_data,
                                card_data=card_data,
                                goals=goals,
-                               table_data=table_data[:4],
+                               table_data=table_data,
                                bar=bar,
                                line=line,
                                stack_bar=stack_bar,
@@ -226,6 +229,107 @@ def add_expense():
             return redirect('/home')
     else:
         return redirect('/')
+
+
+@app.route('/home/filter_records', methods=['POST'])
+def filter_records():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            start_date = data.get('start_date', '')
+            end_date = data.get('end_date', '')
+            category = data.get('category', '')
+            min_amount = data.get('min_amount', '')
+            max_amount = data.get('max_amount', '')
+            keyword = data.get('keyword', '')
+            
+            # Build dynamic query
+            query = """SELECT * FROM user_expenses WHERE user_id = {}""".format(session['user_id'])
+            
+            if start_date:
+                query += """ AND pdate >= '{}'""".format(start_date)
+            if end_date:
+                query += """ AND pdate <= '{}'""".format(end_date)
+            if category:
+                query += """ AND expense = '{}'""".format(category)
+            if min_amount:
+                query += """ AND amount >= {}""".format(float(min_amount))
+            if max_amount:
+                query += """ AND amount <= {}""".format(float(max_amount))
+            if keyword:
+                query += """ AND (pdescription LIKE '%{}%' OR expense LIKE '%{}%')""".format(keyword, keyword)
+            
+            query += """ ORDER BY pdate DESC"""
+            
+            filtered_data = support.execute_query("search", query)
+            
+            return jsonify({
+                'records': filtered_data,
+                'count': len(filtered_data)
+            })
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/edit_expense', methods=['POST'])
+def edit_expense():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            record_id = data.get('id')
+            date = data.get('date')
+            expense = data.get('expense')
+            amount = data.get('amount')
+            note = data.get('note')
+            
+            # Verify the record belongs to the logged-in user
+            verify_query = """SELECT * FROM user_expenses WHERE id = {} AND user_id = {}""".format(
+                record_id, session['user_id'])
+            existing_record = support.execute_query('search', verify_query)
+            
+            if len(existing_record) == 0:
+                return jsonify({'error': 'Record not found or unauthorized'}), 403
+            
+            # Update the record
+            update_query = """UPDATE user_expenses SET pdate = '{}', expense = '{}', amount = {}, pdescription = '{}' 
+                           WHERE id = {} AND user_id = {}""".format(
+                date, expense, float(amount), note, record_id, session['user_id'])
+            support.execute_query('insert', update_query)
+            
+            return jsonify({'success': True, 'message': 'Record updated successfully'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/delete_expense', methods=['POST'])
+def delete_expense():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            record_id = data.get('id')
+            
+            # Verify the record belongs to the logged-in user
+            verify_query = """SELECT * FROM user_expenses WHERE id = {} AND user_id = {}""".format(
+                record_id, session['user_id'])
+            existing_record = support.execute_query('search', verify_query)
+            
+            if len(existing_record) == 0:
+                return jsonify({'error': 'Record not found or unauthorized'}), 403
+            
+            # Delete the record
+            delete_query = """DELETE FROM user_expenses WHERE id = {} AND user_id = {}""".format(
+                record_id, session['user_id'])
+            support.execute_query('insert', delete_query)
+            
+            return jsonify({'success': True, 'message': 'Record deleted successfully'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
 
 
 @app.route('/analysis')
