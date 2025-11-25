@@ -1,0 +1,739 @@
+================================================================================
+                    CHACHING EXPENSE TRACKER - USER MANUAL
+================================================================================
+
+TABLE OF CONTENTS
+-----------------
+1. System Overview
+2. System Requirements
+3. Installation Guide
+4. Getting Started
+5. User Authentication
+6. Home Page Operations
+7. Analysis Page
+8. Profile Management
+9. Contact Support
+10. Troubleshooting
+11. Security & Session Management
+
+================================================================================
+1. SYSTEM OVERVIEW
+================================================================================
+
+ChaChing Expense Tracker is a comprehensive web-based application built on Flask
+that helps you manage your financial transactions including earnings, expenses,
+investments, and savings. The application provides powerful visualization tools
+and analytics to help you make informed financial decisions.
+
+Key Features:
+- Secure login and registration system
+- Real-time expense tracking and categorization
+- Interactive data visualizations and charts
+- Advanced filtering and search capabilities
+- Edit and delete transaction records
+- Personal goal management with notepad
+- Savings goal tracker with progress monitoring
+- Monthly trend analysis
+- Calendar integration
+- Profile management
+
+================================================================================
+2. SYSTEM REQUIREMENTS
+================================================================================
+
+Before installing ChaChing Expense Tracker, ensure your system meets the
+following requirements:
+
+Software Requirements:
+- Python 3.6 or higher
+- Web browser (Chrome, Firefox, Safari, or Edge recommended)
+- Internet connection (for initial setup)
+
+Required Python Packages:
+- Flask 2.2.2 (Web framework)
+- Plotly 5.11.0 (Data visualization)
+- Pandas 1.5.2 (Data manipulation)
+- NumPy 1.24.0 or higher (Numerical operations)
+- mysql-connector-python 8.0.31 (Database connectivity)
+- Additional dependencies listed in requirements.txt
+
+Hardware Requirements:
+- Minimum 2GB RAM
+- 500MB free disk space
+- Modern processor (dual-core or better recommended)
+
+================================================================================
+3. INSTALLATION GUIDE
+================================================================================
+
+Step 1: Clone the Repository
+-----------------------------
+Open your terminal/command prompt and run:
+
+    git clone https://github.com/chrollow/ChaChing.git
+
+Navigate to the project directory:
+
+    cd ChaChing
+
+
+Step 2: Install Required Packages
+----------------------------------
+First, upgrade pip, setuptools, and wheel:
+
+    python -m pip install --upgrade pip setuptools wheel
+
+Then install all required packages:
+
+    pip install -r requirements.txt
+
+Note: If you encounter numpy installation errors on Python 3.12, the
+requirements.txt has been updated to support newer Python versions.
+
+
+Step 3: Run the Application
+----------------------------
+Start the Flask application:
+
+    python main.py
+
+The application will start on http://127.0.0.1:5000/
+
+Open your web browser and navigate to:
+    http://localhost:5000
+
+
+Step 4: First Time Setup
+-------------------------
+The application will automatically create the necessary database tables
+on first run using SQLite (expense.db file).
+
+================================================================================
+4. GETTING STARTED
+================================================================================
+
+Initial Access:
+1. Open your web browser
+2. Navigate to http://localhost:5000
+3. You will see the login page
+
+For new users:
+- Click on "Register" to create a new account
+- For existing users, enter your credentials to login
+
+================================================================================
+5. USER AUTHENTICATION
+================================================================================
+
+5.1 REGISTRATION
+----------------
+To create a new account:
+
+1. Click on the "Register" link on the login page
+2. Fill in the required information:
+   - Name (minimum 6 characters)
+   - Email address (minimum 11 characters, must be unique)
+   - Password (minimum 6 characters)
+3. Click "Register" button
+4. Upon successful registration, you will be automatically logged in
+   and redirected to the home page
+
+Registration Notes:
+- Email addresses must be unique
+- If email already exists, you'll receive an error message
+- All fields are mandatory
+- You cannot access the registration page while logged in
+
+
+5.2 LOGIN
+---------
+To access your account:
+
+1. Enter your registered email address
+2. Enter your password
+3. Click "Login" button
+
+Login Features:
+- If credentials are incorrect, an alert will notify you
+- Session will remain active for 15 minutes of inactivity
+- Already logged-in users will be redirected to home page
+
+
+5.3 PASSWORD RESET (FORGOT PASSWORD)
+-------------------------------------
+To reset your password:
+
+1. Click "Forgot Password" link on the login page
+2. Enter your registered email address
+3. Enter your new password
+4. Click submit
+
+Important: This feature currently allows password reset without authentication,
+so keep your email address secure.
+
+
+5.4 LOGOUT
+----------
+To logout:
+- Click the "Logout" button in the navigation bar
+- You will be redirected to the login page
+- Your session will be terminated
+
+================================================================================
+6. HOME PAGE OPERATIONS
+================================================================================
+
+The Home Page is your central dashboard for managing financial transactions.
+
+6.1 OVERVIEW TILES
+------------------
+At the top, you'll see four summary tiles displaying:
+- Total Earnings (₱)
+- Total Spends (₱)
+- Total Investments (₱)
+- Total Savings (₱)
+
+These tiles provide a quick snapshot of your overall financial status.
+
+
+6.2 ADDING NEW RECORDS
+-----------------------
+To add a new expense record:
+
+1. Click the "Add New Record" button
+2. Fill in the form:
+   - Date: Select the transaction date
+   - Expense Type: Choose from:
+     * Earning
+     * Spend
+     * Investment
+     * Saving
+   - Amount: Enter the amount in Philippine Peso (₱)
+   - Category/Note: Select or enter category:
+     * Income categories: Salary, Business, Others
+     * Expense categories: Fuel, EMI, Bills, Medical, Fees, Vacation
+     * Investment categories: Mutual Funds, Bonds, ETF, Fixed Deposit,
+       Retirement Plan, Real Estate
+     * Savings categories: Home Purchase, Child Saving, Health Account, Bank
+3. Click "Submit"
+4. The page will refresh and show your new record
+
+
+6.3 FILTERING AND SEARCHING RECORDS
+------------------------------------
+Use the Filter & Search panel to find specific records:
+
+Date Range Filter:
+- Start Date: Select beginning date
+- End Date: Select ending date
+
+Category Filter:
+- Select from: All Categories, Earning, Spend, Investment, or Saving
+
+Amount Range Filter:
+- Min: Enter minimum amount
+- Max: Enter maximum amount
+
+Search Keywords:
+- Type keywords to search in notes and expense types
+- Press Enter or click "Apply" to filter
+
+Buttons:
+- "Apply" - Execute the filter
+- "Clear" - Reset all filters and show all records
+
+The record count will update to show how many records match your filters.
+
+
+6.4 VIEWING RECORDS
+-------------------
+Records Table Features:
+- Shows up to 20 most recent records by default
+- Displays: Date, Expense Type, Amount (₱), Note
+- Scrollable list for viewing all records
+- Color-coded for easy identification
+
+
+6.5 EDITING RECORDS
+-------------------
+To edit an existing record:
+
+1. Find the record you want to edit
+2. Click the yellow "Edit" button (pencil icon)
+3. A modal will open with pre-filled data
+4. Modify any fields:
+   - Date
+   - Expense Type
+   - Amount
+   - Category/Note
+5. Click "Update Record"
+6. Confirmation message will appear
+7. Page refreshes automatically to show updated data
+
+All charts and statistics will update automatically after editing.
+
+
+6.6 DELETING RECORDS
+--------------------
+To delete a record:
+
+1. Find the record you want to delete
+2. Click the red "Delete" button (trash icon)
+3. Confirm the deletion in the popup dialog
+4. The record will be permanently removed
+5. Page refreshes automatically
+
+Warning: Deletion cannot be undone. All related charts and analytics will
+update to reflect the deletion.
+
+
+6.7 MY GOALS (PERSONAL NOTEPAD)
+--------------------------------
+Track your personal financial goals:
+
+Adding a Goal:
+1. Type your goal in the input field (e.g., "Save ₱50,000 for vacation")
+2. Press Enter or click the "+" button
+3. Goal appears in the list below
+
+Managing Goals:
+- Check the box when you achieve a goal (it will be crossed out)
+- Click the delete icon to remove a goal
+- Goals are saved in your browser and persist between sessions
+
+Features:
+- Unlimited goals
+- Completed goals appear faded with strikethrough
+- Scrollable list for many goals
+- Hover effects for better interaction
+
+
+6.8 SAVINGS GOAL TRACKER
+-------------------------
+Track progress toward a specific savings target:
+
+Setting Up a Goal:
+1. Enter Goal Name (e.g., "Emergency Fund", "New Car")
+2. Enter Target Amount (how much you want to save)
+3. Enter Current Savings (what you have saved so far)
+4. Click "Set Goal"
+
+Tracking Progress:
+- Visual progress bar shows percentage complete
+- Color-coded by progress:
+  * Red (0-25% complete)
+  * Yellow (25-50% complete)
+  * Blue (50-75% complete)
+  * Cyan (75-100% complete)
+  * Green (100%+ - Goal achieved!)
+- Shows current amount, target amount, and remaining amount
+- Displays percentage complete on the progress bar
+
+Updating Savings:
+1. Enter amount to add in the "Add/Update Savings" field
+2. Click the "+" button or press Enter
+3. Progress bar updates automatically
+4. Celebration message appears when goal is reached
+
+Managing Your Goal:
+- "Edit" button: Modify goal details
+- "Reset" button: Clear current goal and start new one
+- Goals persist in browser storage
+
+
+6.9 MONTHLY TRENDS CHART
+-------------------------
+Interactive line chart showing your financial trends:
+
+Features:
+- Displays last 3 months of data
+- Four trend lines:
+  * Green: Earning
+  * Red: Spend
+  * Yellow: Investment
+  * Cyan: Saving
+- Hover over points to see exact amounts
+- Interactive legend to show/hide specific trends
+- Automatically updates when records are added/edited/deleted
+
+
+6.10 CALENDAR WIDGET
+---------------------
+Current month calendar with highlighted today's date:
+
+Features:
+- Shows current month and year
+- Today's date highlighted in blue with glow effect
+- Hover effects on calendar days
+- Clean, modern design
+- Helps with date reference when adding records
+
+
+6.11 MONTHLY GOALS (ANALYTICS)
+-------------------------------
+Automatic comparison with last month:
+
+Shows for each category (Earning, Spend, Investment, Saving):
+- Current month's total amount
+- Percentage increase or decrease vs. last month
+- Thumbs up (good) or thumbs down (needs attention) indicator
+
+Example:
+- Spend decreased by 15% - Shows thumbs up (good!)
+- Earning increased by 10% - Shows thumbs up (great!)
+
+
+6.12 STATISTICS CARDS
+----------------------
+Five insight cards showing:
+
+1. Highest Income Month
+   - Shows the month and year with highest earnings
+   - Displays the amount
+
+2. Daily Average Income
+   - Average amount you earn per day
+
+3. Weekly Average Savings
+   - Average amount saved per week
+
+4. Monthly Spending Percentage
+   - Percentage of income spent each month
+
+5. Per-Minute Investment
+   - Shows how much you invest every minute
+
+
+6.13 DETAILED ANALYSIS CHARTS (PIE CHARTS)
+-------------------------------------------
+Six interactive pie charts displaying:
+
+1. Earnings by Month - Which months you earn most
+2. Spending by Day - Which days you spend most
+3. Saving Trends - Savings distribution by day of week
+4. Investments by Year - Investment distribution across years
+5. Saving Categories - Breakdown of saving types
+6. Investment Types - Breakdown of investment categories
+
+Features:
+- Hover to see exact amounts and percentages
+- Interactive - click to download as image
+- Automatically filters data by category
+- Shows proportional distribution
+
+================================================================================
+7. ANALYSIS PAGE
+================================================================================
+
+Access: Click "Analysis" in the navigation menu
+
+The Analysis page provides deeper insights with advanced visualizations.
+
+7.1 AVAILABLE CHARTS
+--------------------
+
+Expense Distribution Pie Chart:
+- Shows overall expense breakdown
+- Displays by category (Earning, Spend, Investment, Saving)
+- Hover for exact amounts and percentages
+
+Category Bar Chart:
+- Horizontal bars showing expenses by note/category
+- Color-coded by expense type
+- Interactive hover tooltips
+
+Transaction Timeline:
+- Line chart showing all transactions over time
+- Color-coded by expense type
+- Date range slider for zooming
+- Markers on each transaction
+
+Scatter Plot:
+- Visual representation of transaction amounts over time
+- Point size indicates amount
+- Color indicates expense type
+
+Heatmap:
+- Shows transaction frequency
+- Day of week vs. Month
+- Color intensity shows transaction count
+
+Monthly Bar Chart:
+- Grouped bars by month
+- Shows all four categories side by side
+- Text labels on bars
+- Compare month-to-month trends
+
+Sunburst Chart:
+- Hierarchical view of expenses
+- Year → Expense Type → Category
+- Click segments to drill down
+- Percentage labels on hover
+
+7.2 CHART INTERACTIONS
+----------------------
+All charts support:
+- Hover for detailed information
+- Zoom and pan (where applicable)
+- Download as PNG image
+- Reset axes
+- Toggle legend items
+
+7.3 REQUIREMENTS
+----------------
+- Minimum of 1 record required to view analysis
+- Charts automatically update when records change
+- All data is calculated in real-time
+
+================================================================================
+8. PROFILE MANAGEMENT
+================================================================================
+
+Access: Click "Profile" in the navigation menu
+
+8.1 VIEWING PROFILE
+-------------------
+Your profile page displays:
+- Current username
+- Current email address
+
+8.2 UPDATING PROFILE
+--------------------
+To update your information:
+
+Changing Name:
+1. Enter new name in the Name field
+2. Click "Update Profile"
+3. Confirmation message will appear
+
+Changing Email:
+1. Enter new email address
+2. The email must not already exist in the system
+3. Click "Update Profile"
+4. If email exists, you'll see an error message
+
+Changing Both:
+1. Update both fields
+2. New email must be unique
+3. Click "Update Profile"
+
+Notes:
+- Changes take effect immediately
+- Session remains active after update
+- Invalid changes will show error messages
+
+================================================================================
+9. CONTACT SUPPORT
+================================================================================
+
+Access: Click "Contact Us" in the navigation menu
+
+The Contact page is accessible to all users (logged in or not).
+
+9.1 CONTACT FORM
+----------------
+To submit a query or feedback:
+
+1. Fill in the form fields:
+   - Name
+   - Email address
+   - Phone number
+   - Subject
+   - Message
+2. Click "Submit"
+3. Confirmation message will appear
+4. You'll be redirected based on login status:
+   - Logged in: Redirected to home page
+   - Not logged in: Redirected to login page
+
+9.2 OTHER CONTACT METHODS
+--------------------------
+The page also provides:
+- Phone number (clickable - opens dialer)
+- Email address (clickable - opens email client)
+- Physical address (clickable - opens maps)
+
+================================================================================
+10. TROUBLESHOOTING
+================================================================================
+
+10.1 INSTALLATION ISSUES
+-------------------------
+
+Problem: "pip install" fails with numpy error
+Solution: 
+1. Upgrade pip first: python -m pip install --upgrade pip setuptools wheel
+2. Then run: pip install -r requirements.txt
+
+Problem: "Module not found" error
+Solution: Ensure you're in the correct directory and all packages installed
+
+Problem: Port already in use
+Solution: 
+1. Stop any other Flask apps running
+2. Or modify main.py to use different port:
+   app.run(debug=True, port=5001)
+
+
+10.2 LOGIN ISSUES
+-----------------
+
+Problem: Cannot login with correct credentials
+Solution:
+1. Ensure email and password are correct (case-sensitive)
+2. Try resetting password using "Forgot Password"
+3. Check if account was successfully created
+
+Problem: Registration fails
+Solution:
+1. Ensure all fields meet minimum length requirements
+2. Check if email already exists
+3. Try different email address
+
+
+10.3 DATA ISSUES
+----------------
+
+Problem: Charts not displaying
+Solution:
+1. Ensure you have at least one record added
+2. Refresh the page
+3. Clear browser cache
+4. Check browser console for errors
+
+Problem: Records not saving
+Solution:
+1. Check all required fields are filled
+2. Ensure date is valid
+3. Amount must be positive number
+4. Try refreshing and re-entering
+
+Problem: Filter not working
+Solution:
+1. Click "Clear" and try again
+2. Ensure date range is valid (start before end)
+3. Check amount range values
+4. Refresh page if issues persist
+
+
+10.4 BROWSER ISSUES
+-------------------
+
+Problem: Modal forms not visible
+Solution:
+1. Try different browser
+2. Disable browser extensions
+3. Clear cache and cookies
+4. Zoom to 100%
+
+Problem: Goals/Savings not persisting
+Solution:
+1. Check browser allows localStorage
+2. Disable private/incognito mode
+3. Check browser storage settings
+4. Try different browser
+
+================================================================================
+11. SECURITY & SESSION MANAGEMENT
+================================================================================
+
+11.1 SESSION TIMEOUT
+--------------------
+For security reasons:
+- Sessions automatically expire after 15 minutes of inactivity
+- You'll be logged out automatically
+- You'll need to login again to continue
+- Unsaved data may be lost, so save frequently
+
+11.2 DATA SECURITY
+------------------
+- All data is stored locally in SQLite database
+- Browser localStorage used for goals and savings tracker
+- Goals/Savings are per-browser (not synced across devices)
+- Database file (expense.db) stored in application directory
+
+11.3 BEST PRACTICES
+-------------------
+1. Always logout when finished, especially on shared computers
+2. Use strong passwords (minimum 6 characters recommended)
+3. Don't share your login credentials
+4. Regularly backup your database file (expense.db)
+5. Keep the application updated
+
+11.4 PASSWORD SECURITY
+----------------------
+Note: Current password reset feature doesn't require authentication.
+Keep your email address confidential to prevent unauthorized password changes.
+
+11.5 DATA BACKUP
+----------------
+To backup your data:
+1. Locate the expense.db file in the application directory
+2. Copy this file to a safe location
+3. Schedule regular backups
+4. To restore, replace the expense.db file with your backup
+
+================================================================================
+
+TIPS FOR EFFECTIVE USE
+-----------------------
+
+1. Add records regularly for accurate tracking
+2. Use consistent categories for better analysis
+3. Set realistic savings goals
+4. Review monthly trends to identify spending patterns
+5. Use filters to analyze specific time periods
+6. Check monthly goals to track progress
+7. Update your savings tracker frequently
+8. Use the notepad for quick financial reminders
+9. Export charts for reports or documentation
+10. Review analysis page weekly for insights
+
+================================================================================
+
+KEYBOARD SHORTCUTS
+------------------
+
+Throughout the application:
+- Enter key: Submit forms
+- Enter in search box: Apply filters
+- Enter in goal inputs: Add goal
+- Enter in savings tracker: Update/Set goal
+
+================================================================================
+
+GETTING HELP
+------------
+
+If you need additional assistance:
+
+1. Review this manual thoroughly
+2. Check the README.md file for technical details
+3. Visit the Contact page to reach support
+4. Check the GitHub repository for updates:
+   https://github.com/chrollow/ChaChing
+
+================================================================================
+
+VERSION INFORMATION
+-------------------
+
+Application: ChaChing Expense Tracker
+Version: 1.0
+Framework: Flask 2.2.2
+Database: SQLite3
+Python: 3.6+ (3.12 compatible)
+
+License: MIT License
+Copyright: 2022 Expense Tracker, Inc
+
+================================================================================
+
+THANK YOU FOR USING CHACHING EXPENSE TRACKER!
+
+We hope this application helps you achieve your financial goals.
+Happy tracking!
+
+================================================================================
+                            END OF USER MANUAL
+================================================================================
