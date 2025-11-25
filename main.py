@@ -332,6 +332,185 @@ def delete_expense():
         return jsonify({'error': 'Unauthorized'}), 401
 
 
+@app.route('/home/get_goals', methods=['GET'])
+def get_goals():
+    if 'user_id' in session:
+        try:
+            query = """SELECT id, goal_text, completed FROM user_goals WHERE user_id = {} ORDER BY created_at DESC""".format(
+                session['user_id'])
+            goals = support.execute_query('search', query)
+            goals_list = [{'id': g[0], 'text': g[1], 'completed': bool(g[2])} for g in goals]
+            return jsonify({'success': True, 'goals': goals_list})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/save_goal', methods=['POST'])
+def save_goal():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            goal_text = data.get('text', '').strip()
+            
+            if not goal_text:
+                return jsonify({'error': 'Goal text cannot be empty'}), 400
+            
+            query = """INSERT INTO user_goals (user_id, goal_text) VALUES ({}, '{}')""".format(
+                session['user_id'], goal_text.replace("'", "''"))
+            support.execute_query('insert', query)
+            
+            return jsonify({'success': True, 'message': 'Goal saved successfully'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/toggle_goal', methods=['POST'])
+def toggle_goal():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            goal_id = data.get('id')
+            completed = data.get('completed', False)
+            
+            # Verify the goal belongs to the user
+            verify_query = """SELECT * FROM user_goals WHERE id = {} AND user_id = {}""".format(
+                goal_id, session['user_id'])
+            existing = support.execute_query('search', verify_query)
+            
+            if len(existing) == 0:
+                return jsonify({'error': 'Goal not found or unauthorized'}), 403
+            
+            update_query = """UPDATE user_goals SET completed = {} WHERE id = {} AND user_id = {}""".format(
+                1 if completed else 0, goal_id, session['user_id'])
+            support.execute_query('insert', update_query)
+            
+            return jsonify({'success': True, 'message': 'Goal updated successfully'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/delete_goal', methods=['POST'])
+def delete_goal():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            goal_id = data.get('id')
+            
+            # Verify the goal belongs to the user
+            verify_query = """SELECT * FROM user_goals WHERE id = {} AND user_id = {}""".format(
+                goal_id, session['user_id'])
+            existing = support.execute_query('search', verify_query)
+            
+            if len(existing) == 0:
+                return jsonify({'error': 'Goal not found or unauthorized'}), 403
+            
+            delete_query = """DELETE FROM user_goals WHERE id = {} AND user_id = {}""".format(
+                goal_id, session['user_id'])
+            support.execute_query('insert', delete_query)
+            
+            return jsonify({'success': True, 'message': 'Goal deleted successfully'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/get_savings_goal', methods=['GET'])
+def get_savings_goal():
+    if 'user_id' in session:
+        try:
+            query = """SELECT id, goal_name, target_amount, current_amount FROM user_savings_tracker 
+                      WHERE user_id = {} ORDER BY created_at DESC LIMIT 1""".format(session['user_id'])
+            result = support.execute_query('search', query)
+            
+            if len(result) > 0:
+                savings_data = {
+                    'id': result[0][0],
+                    'goalName': result[0][1],
+                    'targetAmount': result[0][2],
+                    'currentAmount': result[0][3]
+                }
+                return jsonify({'success': True, 'savingsGoal': savings_data})
+            else:
+                return jsonify({'success': True, 'savingsGoal': None})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/save_savings_goal', methods=['POST'])
+def save_savings_goal():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            goal_name = data.get('goalName', '').strip()
+            target_amount = float(data.get('targetAmount', 0))
+            current_amount = float(data.get('currentAmount', 0))
+            
+            if not goal_name or target_amount <= 0:
+                return jsonify({'error': 'Invalid goal name or target amount'}), 400
+            
+            # Check if user already has a savings goal
+            check_query = """SELECT id FROM user_savings_tracker WHERE user_id = {}""".format(session['user_id'])
+            existing = support.execute_query('search', check_query)
+            
+            if len(existing) > 0:
+                # Update existing goal
+                update_query = """UPDATE user_savings_tracker SET goal_name = '{}', target_amount = {}, 
+                                 current_amount = {}, updated_at = CURRENT_TIMESTAMP 
+                                 WHERE user_id = {}""".format(
+                    goal_name.replace("'", "''"), target_amount, current_amount, session['user_id'])
+                support.execute_query('insert', update_query)
+            else:
+                # Create new goal
+                insert_query = """INSERT INTO user_savings_tracker (user_id, goal_name, target_amount, current_amount) 
+                                 VALUES ({}, '{}', {}, {})""".format(
+                    session['user_id'], goal_name.replace("'", "''"), target_amount, current_amount)
+                support.execute_query('insert', insert_query)
+            
+            return jsonify({'success': True, 'message': 'Savings goal saved successfully'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
+@app.route('/home/update_savings', methods=['POST'])
+def update_savings():
+    if 'user_id' in session:
+        try:
+            data = request.get_json()
+            amount = float(data.get('amount', 0))
+            
+            # Get current savings goal
+            query = """SELECT id, current_amount FROM user_savings_tracker WHERE user_id = {} 
+                      ORDER BY created_at DESC LIMIT 1""".format(session['user_id'])
+            result = support.execute_query('search', query)
+            
+            if len(result) == 0:
+                return jsonify({'error': 'No savings goal found'}), 404
+            
+            new_amount = result[0][1] + amount
+            
+            update_query = """UPDATE user_savings_tracker SET current_amount = {}, 
+                             updated_at = CURRENT_TIMESTAMP WHERE id = {} AND user_id = {}""".format(
+                new_amount, result[0][0], session['user_id'])
+            support.execute_query('insert', update_query)
+            
+            return jsonify({'success': True, 'message': 'Savings updated successfully', 'newAmount': new_amount})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+    else:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+
 @app.route('/analysis')
 def analysis():
     if 'user_id' in session:  # if already logged-in

@@ -18,6 +18,14 @@ def connect_db():
         '''CREATE TABLE IF NOT EXISTS user_expenses (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, pdate DATE NOT 
         NULL, expense VARCHAR(10) NOT NULL, amount INTEGER NOT NULL, pdescription VARCHAR(50), FOREIGN KEY (user_id) 
         REFERENCES user_login(user_id))''')
+    cur.execute(
+        '''CREATE TABLE IF NOT EXISTS user_goals (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, 
+        goal_text TEXT NOT NULL, completed INTEGER DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+        FOREIGN KEY (user_id) REFERENCES user_login(user_id))''')
+    cur.execute(
+        '''CREATE TABLE IF NOT EXISTS user_savings_tracker (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, 
+        goal_name TEXT, target_amount REAL, current_amount REAL DEFAULT 0, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES user_login(user_id))''')
     conn.commit()
     return conn, cur
 
